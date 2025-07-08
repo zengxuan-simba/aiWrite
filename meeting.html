@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI助手 - 会议助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .status-bar {
+            height: 44px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: #000;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .main-content {
+            height: calc(100vh - 44px - 60px - 83px);
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .recording-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .record-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 32px rgba(255,107,107,0.3);
+            transition: all 0.3s;
+        }
+        .record-button.recording {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .record-button i {
+            color: white;
+            font-size: 24px;
+        }
+        .recording-info {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .info-item {
+            text-align: center;
+        }
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .transcript-section {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .transcript-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .transcript-content {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+        .transcript-item {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+        .transcript-item:last-child {
+            margin-bottom: 0;
+        }
+        .speaker-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .transcript-text {
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+        }
+        .meeting-summary {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .summary-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 14px;
+        }
+        .bottom-nav {
+            height: 83px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 20px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8e8e93;
+            font-size: 10px;
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: #007aff;
+        }
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS状态栏 -->
+    <div class="status-bar">
+        <div>9:41</div>
+        <div>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-1"></i>
+            <i class="fas fa-battery-three-quarters ml-1"></i>
+        </div>
+    </div>
+
+    <!-- 头部 -->
+    <div class="header">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-semibold text-gray-800">会议助手</h1>
+            <div class="flex gap-3">
+                <i class="fas fa-history text-gray-600 text-lg"></i>
+                <i class="fas fa-cog text-gray-600 text-lg"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 录音区域 -->
+        <div class="recording-section">
+            <div class="record-button recording">
+                <i class="fas fa-stop"></i>
+            </div>
+            <div class="text-lg font-semibold text-gray-800 mb-2">正在录音</div>
+            <div class="text-sm text-gray-500 mb-4">AI正在实时转录会议内容</div>
+            
+            <div class="recording-info">
+                <div class="info-item">
+                    <div class="info-value">12:34</div>
+                    <div class="info-label">录音时长</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">3</div>
+                    <div class="info-label">发言人数</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-value">85%</div>
+                    <div class="info-label">识别准确率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 实时转录 -->
+        <div class="transcript-section">
+            <div class="transcript-header">
+                <h3 class="font-semibold text-gray-800">实时转录</h3>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-xs">
+                        <i class="fas fa-pause mr-1"></i>暂停
+                    </button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs">
+                        <i class="fas fa-download mr-1"></i>导出
+                    </button>
+                </div>
+            </div>
+            
+            <div class="transcript-content">
+                <div class="transcript-item">
+                    <div class="speaker-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="transcript-text">
+                        <strong>张三:</strong> 大家好，今天我们讨论一下Q4的销售策略...
+                    </div>
+                </div>
+                
+                <div class="transcript-item">
+                    <div class="speaker-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="transcript-text">
+                        <strong>李四:</strong> 我认为我们应该重点关注新客户开发...
+                    </div>
+                </div>
+                
+                <div class="transcript-item">
+                    <div class="speaker-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="transcript-text">
+                        <strong>王五:</strong> 同意，同时也要维护好现有客户关系...
+                    </div>
+                </div>
+                
+                <div class="transcript-item">
+                    <div class="speaker-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="transcript-text">
+                        <strong>张三:</strong> 好的，那我们制定具体的行动计划...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 会议总结 -->
+        <div class="meeting-summary">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-semibold text-gray-800">AI会议总结</h3>
+                <span class="text-blue-500 text-sm">刷新</span>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium text-gray-800">会议主题</div>
+                    <div class="text-sm text-gray-500 mt-1">Q4销售策略讨论</div>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                    <i class="fas fa-list-check"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium text-gray-800">关键决策</div>
+                    <div class="text-sm text-gray-500 mt-1">重点开发新客户，维护现有客户</div>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-icon" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium text-gray-800">后续行动</div>
+                    <div class="text-sm text-gray-500 mt-1">制定具体行动计划，下周跟进</div>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-icon" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium text-gray-800">参与人员</div>
+                    <div class="text-sm text-gray-500 mt-1">张三、李四、王五</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-pen"></i></div>
+            <div>写作</div>
+        </div>
+        <div class="nav-item active">
+            <div class="nav-icon"><i class="fas fa-video"></i></div>
+            <div>会议</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+            <div>文档</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+            <div>我的</div>
+        </div>
+    </div>
+</body>
+</html> 

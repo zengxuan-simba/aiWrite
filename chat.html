@@ -270,11 +270,23 @@
                 <!-- AI回复提示 -->
                 <div style="margin-bottom:4px;">
                     <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
-                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">检索到5篇相关材料 <span style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                        <span id="material-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleMaterialList()">检索到4篇相关材料 <span id='material-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                    </div>
+                    <div id="material-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>2024年重点科研方向与科创任务.docx</div>
+                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>中国移动科技创新管理工作要点.docx</div>
+                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-powerpoint" style="color:#e67c73;"></i>中国移动科技创新管理工作要点.pptx</div>
+                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-pdf" style="color:#e67c73;"></i>议题1：2025年科技创新任务和要求.pdf</div>
                     </div>
                     <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
-                        <!--<img src='https://img.alicdn.com/imgextra/i2/O1CN01Qn6QwC1Qw1Qw1Qw1Q_!!6000000002007-2-tps-32-32.png' alt='' style='width:16px;height:16px;margin-right:4px;vertical-align:middle;'/>-->
-                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">搜索到 48 个网页 <span style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                        <span id="web-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleWebList()">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                    </div>
+                    <div id="web-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">1、中国移动新产业加速布局 规范有序推进科技型企业设立</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">2、中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">3、定了！2025，中国移动持续构建超80大新格局！</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">4、中国移动：竞聘笔试题及答案集！</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">5、三大运营商瞄准2025年重点任务</div>
                     </div>
                     <div style="color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;">
                         <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">深度思考过程<span style='font-size:14px;margin-left:2px;'>v</span></span>
@@ -351,5 +363,29 @@
             <div>我的</div>
         </div>
     </div>
+    <script>
+    function toggleMaterialList() {
+        var list = document.getElementById('material-list');
+        var arrow = document.getElementById('material-arrow');
+        if(list.style.display === 'none') {
+            list.style.display = 'block';
+            arrow.innerHTML = '▼';
+        } else {
+            list.style.display = 'none';
+            arrow.innerHTML = '&gt;';
+        }
+    }
+    function toggleWebList() {
+        var list = document.getElementById('web-list');
+        var arrow = document.getElementById('web-arrow');
+        if(list.style.display === 'none') {
+            list.style.display = 'block';
+            arrow.innerHTML = '▼';
+        } else {
+            list.style.display = 'none';
+            arrow.innerHTML = '&gt;';
+        }
+    }
+    </script>
 </body>
 </html> 

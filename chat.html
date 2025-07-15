@@ -265,15 +265,20 @@
         <!-- AI回复区域 -->
         <div style="display:flex;align-items:flex-start;">
             <!-- 机器人icon -->
-            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:10px;margin-top:2px;"><i class="fas fa-robot"></i></div>
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;"><i class="fas fa-robot"></i></div>
             <div style="flex:1;">
                 <!-- AI回复提示 -->
                 <div style="margin-bottom:4px;">
-                    <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;">
-                        <img src='https://img.alicdn.com/imgextra/i2/O1CN01Qn6QwC1Qw1Qw1Qw1Q_!!6000000002007-2-tps-32-32.png' alt='' style='width:16px;height:16px;margin-right:4px;vertical-align:middle;'/>
-                        已搜索到 48 个网页
+                    <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
+                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">检索到5篇相关材料 <span style='font-size:14px;margin-left:2px;'>&gt;</span></span>
                     </div>
-                    <div style="color:#888;font-size:13px;line-height:1.3;margin-left:20px;">已深度思考（用时 34 秒）</div>
+                    <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
+                        <!--<img src='https://img.alicdn.com/imgextra/i2/O1CN01Qn6QwC1Qw1Qw1Qw1Q_!!6000000002007-2-tps-32-32.png' alt='' style='width:16px;height:16px;margin-right:4px;vertical-align:middle;'/>-->
+                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">搜索到 48 个网页 <span style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                    </div>
+                    <div style="color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;">
+                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">深度思考过程<span style='font-size:14px;margin-left:2px;'>v</span></span>
+                    </div>
                 </div>
                 <!-- AI助手回复气泡 -->
                 <div style="background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;">

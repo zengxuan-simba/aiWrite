@@ -535,6 +535,90 @@
         origToggleMaterialList();
         setTimeout(bindMaterialListClick, 0);
     }
+    // 文件选择弹层交互
+    function showFileSelector() {
+        let mask = document.getElementById('fileSelectorMask');
+        if (!mask) {
+            mask = document.createElement('div');
+            mask.id = 'fileSelectorMask';
+            mask.style = 'display:block;position:fixed;z-index:2300;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);';
+            mask.onclick = hideFileSelector;
+            document.body.appendChild(mask);
+        } else {
+            mask.style.display = 'block';
+        }
+        let panel = document.getElementById('fileSelectorPanel');
+        if (!panel) {
+            panel = document.createElement('div');
+            panel.id = 'fileSelectorPanel';
+            panel.style = 'display:block;position:fixed;z-index:2301;left:50%;top:50%;transform:translate(-50%,-50%);width:98vw;max-width:520px;max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0;overflow:hidden;';
+            panel.innerHTML = `
+                <div style='padding:0 0 0 0;background:#fff;'>
+                    <div style='display:flex;align-items:center;height:48px;border-bottom:1px solid #f0f0f0;padding-left:10px;'>
+                        <div class='file-tab file-tab-active'>全部</div>
+                        <div class='file-tab'>集团级</div>
+                        <div class='file-tab'>部门级</div>
+                        <div class='file-tab'>专项类</div>
+                        <div class='file-tab'>个人</div>
+                        <i class="fas fa-times" style="font-size:20px;color:#888;cursor:pointer;margin-left:auto;margin-right:18px;" onclick="hideFileSelector()"></i>
+                    </div>
+                    <div style='padding:10px 18px 0 18px;border-bottom:1px solid #f0f0f0;background:#fff;'>
+                        <div style='position:relative;'>
+                            <input type='text' placeholder='请输入文档名称' style='width:100%;height:36px;border-radius:8px;border:1px solid #e0e0e0;padding:0 36px 0 12px;font-size:15px;background:#fafbfc;outline:none;'>
+                            <i class="fas fa-search" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#bbb;font-size:16px;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div style='padding:0 0 0 0;overflow-y:auto;max-height:60vh;'>
+                    <div style='padding:0 18px 0 18px;'>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-pdf" style="color:#e74c3c;margin-right:8px;"></i>国资委中央企业科技创新工作部署会_会议情况摘要0403.pdf</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-powerpoint" style="color:#f39c12;margin-right:8px;"></i>[现场播报] 中国移动区域研发机构发展情况-0521V10.pptx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>杨杰书记20250427党组织会理论学习强调意见.doc</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>杨杰书记20250421党组织会理论学习强调意见.doc</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>附件4：总部部门落实《中国移动整治形式主义为基层减负工作...docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>科技创新部第一党小组全员的人才照检查材料精编版-陈洪涛.docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>科技创新部第一党小组全员的人才照检查材料精编版-杜倩.docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-excel" style="color:#27ae60;margin-right:8px;"></i>科技创新部和党组织生活会会议谈话统计.xlsx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>总部党委部（党总支）2024年度落实党建重点任务台账V4.xlsx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于配合落实开展“新动力”量身学习的通知的指示.docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于落实直属党委办公室督导考察工作进展情况的反馈V3.docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于开展和推进科技创新部“数字孪生”互动型学习主题党日活动的...docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于科技创新部和党支部组织生活会的反馈.docx</div>
+                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于开展“合力攻坚 智科创”实践活动的指导意见20250418.docx</div>
+                    </div>
+                </div>
+            `;
+            // Tab样式
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .file-tab {font-size:15px;padding:0 12px;height:48px;line-height:48px;cursor:pointer;color:#888;transition:color 0.2s;}
+                .file-tab-active {color:#1677ff;font-weight:600;border-bottom:2px solid #1677ff;background:#fff;}
+                .file-row {display:flex;align-items:center;font-size:15px;padding:10px 0;border-bottom:1px solid #f6f6f6;}
+                .file-row:last-child{border-bottom:none;}
+                .file-row input[type=checkbox]{width:16px;height:16px;}
+            `;
+            panel.appendChild(style);
+            document.body.appendChild(panel);
+        } else {
+            panel.style.display = 'block';
+        }
+    }
+    function hideFileSelector() {
+        let mask = document.getElementById('fileSelectorMask');
+        let panel = document.getElementById('fileSelectorPanel');
+        if(mask) mask.style.display = 'none';
+        if(panel) panel.style.display = 'none';
+    }
+    // 绑定+按钮
+    window.addEventListener('DOMContentLoaded',function(){
+        var plusBtn = document.querySelector('.input-container .fa-plus');
+        if(plusBtn){
+            plusBtn.onclick = function(e){
+                e.stopPropagation();
+                showFileSelector();
+            }
+        }
+    });
     </script>
 </body>
 </html> 

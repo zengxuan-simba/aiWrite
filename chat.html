@@ -282,14 +282,21 @@
                         <span id="web-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleWebList()">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
                     </div>
                     <div id="web-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">1、中国移动新产业加速布局 规范有序推进科技型企业设立</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">2、中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">3、定了！2025，中国移动持续构建超80大新格局！</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">4、中国移动：竞聘笔试题及答案集！</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">5、三大运营商瞄准2025年重点任务</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[1] 中国移动新产业加速布局 规范有序推进科技型企业设立</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[2] 中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[3] 定了！2025，中国移动持续构建超80大新格局！</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[4] 中国移动：竞聘笔试题及答案集！</div>
+                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[5] 三大运营商瞄准2025年重点任务</div>
                     </div>
                     <div style="color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;">
-                        <span style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'">深度思考过程<span style='font-size:14px;margin-left:2px;'>v</span></span>
+                        <span id="think-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleThinkList()">深度思考过程<span id='think-arrow' style='font-size:14px;margin-left:2px;'>v</span></span>
+                    </div>
+                    <div id="think-list" style="display:none;background:#f5f7fa;border-radius:10px;padding:14px 16px 10px 16px;margin:8px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);color:#444;font-size:15px;line-height:1.8;">
+                        好的，我现在需要回答用户关于“2025年科创任务重点”的问题，并且根据提供的搜索结果来生成答案，同时梳理8篇材料。首先，我要依据前面调研和搜集结果，找出其中提到的2025年科技创新的重点任务。<br><br>
+                        首先，搜索结果中的前三个网页（[1]，[2]，[3]）都来自2025年1月14日至15日的全国科技工作会议，内容最权威。这些网页列举2025年若干科技创新的重点方向，包括基础研究、关键核心技术攻关、加速成果转化、促进科技与产业融合、战略性科技力量部署。这些都是核心任务，需重点引用。<br><br>
+                        接下来，网页[4]是21世纪经济网的报道，进一步解释了科技攻关的方向，特别是要科技人才一体化改革，以及科技成果转化的加强。这些理解内容可以作为补充，特别是关于科技链和知识成果的分析。<br><br>
+                        网页[5]重点梳理科技部的工作重点，虽然不是地方页面，但其提到的评价也有借鉴意义。科技成果链出自科创、教育、管理等多部门协作，强调创新链、产业链、资金链的融合，但可能不覆盖最原始的重点，需辩证看待部分观点。<br><br>
+                        网页[6]、[7]、[8]主要涉及国际科技进展，如量子技术、基因疗养、太空探索等，但用户的问题可能更关注国内的任务重点，因此这些内容只需相对性转化，但如有亮点也可补充。
                     </div>
                 </div>
                 <!-- AI助手回复气泡 -->
@@ -384,6 +391,17 @@
         } else {
             list.style.display = 'none';
             arrow.innerHTML = '&gt;';
+        }
+    }
+    function toggleThinkList() {
+        var list = document.getElementById('think-list');
+        var arrow = document.getElementById('think-arrow');
+        if(list.style.display === 'none') {
+            list.style.display = 'block';
+            arrow.innerHTML = '▲';
+        } else {
+            list.style.display = 'none';
+            arrow.innerHTML = 'v';
         }
     }
     </script>

@@ -328,6 +328,31 @@
                 </div>
             </div>
         </div>
+        <!-- 网页弹窗遮罩和弹窗 -->
+        <div id="webMask" style="display:none;position:fixed;z-index:2000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);" onclick="hideWebDialog()"></div>
+        <div id="webDialog" style="display:none;position:fixed;z-index:2001;left:50%;top:-200%;transform:translate(-50%,-50%);width:90vw;max-width:380px;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:32px 20px 18px 20px;text-align:center;">
+            <div style="font-size:18px;font-weight:700;margin-bottom:18px;">您即将离开本应用，跳转到第三方网站</div>
+            <div style="color:#444;font-size:15px;line-height:1.7;margin-bottom:28px;">本应用出于为您提供便利的目的向您提供第三方链接，我们不对第三方网站的内容负责，请您审慎访问，保护好您的信息及财产安全。</div>
+            <div style="display:flex;gap:16px;justify-content:center;">
+                <button onclick="hideWebDialog()" style="flex:1;height:44px;background:#f5f5f5;color:#222;font-size:16px;font-weight:500;border:none;border-radius:10px;">取消</button>
+                <button onclick="showWebLayer()" style="flex:1;height:44px;background:#222;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:10px;">继续访问</button>
+            </div>
+        </div>
+        <!-- 网页内容浮层 -->
+        <div id="webLayerMask" style="display:none;position:fixed;z-index:2100;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);" onclick="hideWebLayer()"></div>
+        <div id="webLayer" style="display:none;position:fixed;z-index:2101;left:50%;top:-150%;transform:translate(-50%,-50%);width:98vw;max-width:480px;height:90vh;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);overflow:hidden;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 0 18px;background:#fff;">
+                <div style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">全国科技工作会议第二次全体会议召开 全面启动新一轮科技体制改革</div>
+                <i class="fas fa-times text-gray-400 text-xl cursor-pointer" onclick="hideWebLayer()"></i>
+            </div>
+            <div style="flex:1;overflow-y:auto;padding:0 18px 18px 18px;">
+                <div style="color:#222;font-size:15px;line-height:1.8;margin-top:10px;">
+                    <b>2025年是全面落实全国科技大会精神、加快建设科技强国的关键之年。</b>记者从14日在京举行的全国科技工作会议第二次全体会议上获悉：2025年我国将坚持“四个面向”，发挥新型举国体制优势，全面加强科技布局和攻关，全面启动新一轮科技体制改革，着力提升体系化科技创新能力，有力支撑高质量发展、保障高水平安全。<br><br>
+                    会议提出，2025年，要建立科技强国建设任务清单和路线图，研究编制“十五五”国家科技创新规划和专项规划，构建组织策源科技重大项目，加快建设国家战略科技力量。大力加强基础研究，强化关键核心技术攻关，推动科技成果转化和产业化。<br><br>
+                    <b>（内容为示例，实际可替换为iframe或真实网页内容）</b>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -403,6 +428,43 @@
             list.style.display = 'none';
             arrow.innerHTML = 'v';
         }
+    }
+    // 网页弹窗与浮层交互
+    function showWebDialog() {
+        document.getElementById('webDialog').style.display = 'block';
+        document.getElementById('webMask').style.display = 'block';
+    }
+    function hideWebDialog() {
+        document.getElementById('webDialog').style.display = 'none';
+        document.getElementById('webMask').style.display = 'none';
+    }
+    function showWebLayer() {
+        hideWebDialog();
+        document.getElementById('webLayer').style.display = 'flex';
+        document.getElementById('webLayerMask').style.display = 'block';
+    }
+    function hideWebLayer() {
+        document.getElementById('webLayer').style.display = 'none';
+        document.getElementById('webLayerMask').style.display = 'none';
+    }
+    // 绑定网页列表项点击事件
+    function bindWebListClick() {
+        var webList = document.getElementById('web-list');
+        if(webList) {
+            var items = webList.querySelectorAll('div');
+            items.forEach(function(item){
+                item.onclick = function(e){
+                    e.stopPropagation();
+                    showWebDialog();
+                };
+            });
+        }
+    }
+    // 保证每次展开网页列表都绑定事件
+    const origToggleWebList = toggleWebList;
+    toggleWebList = function() {
+        origToggleWebList();
+        setTimeout(bindWebListClick, 0);
     }
     </script>
 </body>

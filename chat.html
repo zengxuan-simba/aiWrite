@@ -447,6 +447,11 @@
         document.getElementById('webLayer').style.display = 'none';
         document.getElementById('webLayerMask').style.display = 'none';
     }
+    // 页面加载时隐藏网页内容浮层，防止自动弹出
+    window.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('webLayer').style.display = 'none';
+        document.getElementById('webLayerMask').style.display = 'none';
+    });
     // 绑定网页列表项点击事件
     function bindWebListClick() {
         var webList = document.getElementById('web-list');

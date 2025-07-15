@@ -471,6 +471,70 @@
         origToggleWebList();
         setTimeout(bindWebListClick, 0);
     }
+    // 材料文档弹窗交互
+    function showMaterialDialog(title) {
+        // 创建遮罩
+        let mask = document.getElementById('materialMask');
+        if (!mask) {
+            mask = document.createElement('div');
+            mask.id = 'materialMask';
+            mask.style = 'display:block;position:fixed;z-index:2200;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);';
+            mask.onclick = hideMaterialDialog;
+            document.body.appendChild(mask);
+        } else {
+            mask.style.display = 'block';
+        }
+        // 创建弹窗
+        let dialog = document.getElementById('materialDialog');
+        if (!dialog) {
+            dialog = document.createElement('div');
+            dialog.id = 'materialDialog';
+            dialog.style = 'display:block;position:fixed;z-index:2201;left:50%;top:45%;transform:translate(-50%,-50%);width:96vw;max-width:420px;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0;text-align:center;overflow:hidden;';
+            dialog.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;position:relative;height:48px;border-bottom:1px solid #f0f0f0;background:#fff;">
+                    <div id="materialDialogTitle" style="font-size:16px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 40px;">文档标题</div>
+                    <i class="fas fa-times" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px;color:#888;cursor:pointer;" onclick="hideMaterialDialog()"></i>
+                </div>
+                <div style="padding:18px 10px 18px 10px;overflow-y:auto;max-height:62vh;">
+                    <div style='background:#fff;border-radius:12px;padding:18px 12px 18px 12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:left;position:relative;'>
+                        <div style='position:absolute;top:10px;right:14px;font-size:12px;color:#888;'>1 / 28</div>
+                        <div style='font-size:18px;font-weight:700;text-align:center;margin-bottom:8px;'>2024 重点科研方向与科创任务</div>
+                        <div style='font-size:14px;color:#444;text-align:center;margin-bottom:8px;'>技术部（重大科技专项办公室）</div>
+                        <div style='font-size:15px;color:#222;line-height:2;'>2024年是“十四五”规划实施的关键之年，也是公司实现2025年创建世界一流“力量更大”战略目标的攻坚之年。2024年科技创新工作的总体思路是：深入贯彻习近平新时代中国特色社会主义思想，全国两会和集团工作会精神，加快培育壮大战略性新兴产业，围绕“筑基-高峰-转化”创新体系，建强一流科技创新能力体系，夯实基础研究、关键核心技术攻关和成果转化工作，升级创新体系，着力发挥科技引领、产业控制、安全支撑三作用，勇担战略使命，聚焦原创、突破性、高能级新质生产力，构建现代化产业链图谱，数字中国自主力量，海外平进追赶国际科技创新前沿高点，为中国式现代化建设贡献中国移动力量。</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+        } else {
+            dialog.style.display = 'block';
+        }
+        document.getElementById('materialDialogTitle').innerText = title;
+    }
+    function hideMaterialDialog() {
+        let mask = document.getElementById('materialMask');
+        let dialog = document.getElementById('materialDialog');
+        if(mask) mask.style.display = 'none';
+        if(dialog) dialog.style.display = 'none';
+    }
+    // 绑定材料列表项点击事件
+    function bindMaterialListClick() {
+        var materialList = document.getElementById('material-list');
+        if(materialList) {
+            var items = materialList.querySelectorAll('div');
+            items.forEach(function(item){
+                item.onclick = function(e){
+                    e.stopPropagation();
+                    showMaterialDialog(this.textContent.trim());
+                };
+            });
+        }
+    }
+    // 保证每次展开材料列表都绑定事件
+    const origToggleMaterialList = toggleMaterialList;
+    toggleMaterialList = function() {
+        origToggleMaterialList();
+        setTimeout(bindMaterialListClick, 0);
+    }
     </script>
 </body>
 </html> 

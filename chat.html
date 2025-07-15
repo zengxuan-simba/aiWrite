@@ -657,6 +657,15 @@
         var list = document.createElement('div');
         list.id = 'selectedFileCardList';
         list.style = 'display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;overflow-x:auto;';
+        // 文案说明
+        var tip = document.createElement('div');
+        tip.textContent = '仅识别附件中的文字';
+        tip.style = 'font-size:13px;color:#888;margin-bottom:6px;margin-left:8px;';
+        // 外层容器
+        var wrap = document.createElement('div');
+        wrap.id = 'selectedFileCardListWrap';
+        wrap.appendChild(tip);
+        wrap.appendChild(list);
         files.forEach(function(file, idx){
             var card = document.createElement('div');
             card.className = 'selected-file-card';
@@ -682,7 +691,7 @@
             `;
             list.appendChild(card);
         });
-        container.parentElement.insertBefore(list, container);
+        container.parentElement.insertBefore(wrap, container);
     }
     </script>
 </body>

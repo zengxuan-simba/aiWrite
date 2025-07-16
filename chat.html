@@ -705,7 +705,16 @@
                 if(chatContainer){
                     chatContainer.innerHTML = `
                         <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
-                            <img src='https://cdn.jsdelivr.net/gh/DeepSeek-AI/brand/logo/DeepSeek_logo_icon_blue.svg' alt='logo' style='width:56px;height:56px;margin-bottom:18px;'>
+                            <span style="display:inline-block;width:48px;height:48px;margin-bottom:18px;background:#f3f7fc;border-radius:12px;overflow:hidden;">
+                              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                  <path d="M24 6C13 6 6 13 6 24c0 11 7 18 18 18s18-7 18-18c0-11-7-18-18-18z" fill="#f3f7fc"/>
+                                  <path d="M13.5 24c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                                  <path d="M13.5 28c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                                  <path d="M13.5 32c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#8dc63f" stroke-width="2.2" fill="none"/>
+                                </g>
+                              </svg>
+                            </span>
                             <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
                             <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
                         </div>

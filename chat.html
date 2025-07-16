@@ -694,5 +694,26 @@
         container.parentElement.insertBefore(wrap, container);
     }
     </script>
+    <script>
+    // 新建对话交互
+    document.addEventListener('DOMContentLoaded', function(){
+        var plusBtn = document.querySelector('.fa-plus-circle');
+        if(plusBtn){
+            plusBtn.style.cursor = 'pointer';
+            plusBtn.onclick = function(){
+                var chatContainer = document.querySelector('.chat-container');
+                if(chatContainer){
+                    chatContainer.innerHTML = `
+                        <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
+                            <img src='https://cdn.jsdelivr.net/gh/DeepSeek-AI/brand/logo/DeepSeek_logo_icon_blue.svg' alt='logo' style='width:56px;height:56px;margin-bottom:18px;'>
+                            <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
+                            <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
+                        </div>
+                    `;
+                }
+            }
+        }
+    });
+    </script>
 </body>
 </html> 

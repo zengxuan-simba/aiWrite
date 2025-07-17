@@ -245,8 +245,29 @@
     <div class="search-container">
         <div class="flex items-center">
             <i class="fas fa-search text-gray-400 mr-3"></i>
-            <input type="text" class="search-input" placeholder="搜索文档...">
-            <!--<i class="fas fa-filter text-gray-400 ml-3"></i>--> 
+            <input type="text" class="search-input" placeholder="搜索文档..." id="fileSearchInput" inputmode="search" enterkeyhint="search" autocomplete="off">
+            <i class="fas fa-times text-gray-400 ml-3" id="clearSearchBtn" style="display:none;cursor:pointer;"></i>
+        </div>
+    </div>
+    <!-- PC端虚拟键盘，仅在PC端显示 -->
+    <div id="virtualKeyboard" style="display:none;position:fixed;left:0;bottom:83px;width:100vw;z-index:2000;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 16px rgba(0,0,0,0.06);padding:10px 0;transition:all 0.2s;">
+        <div style="max-width:500px;margin:0 auto;">
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;">
+                <button class="vk-key">Q</button><button class="vk-key">W</button><button class="vk-key">E</button><button class="vk-key">R</button><button class="vk-key">T</button><button class="vk-key">Y</button><button class="vk-key">U</button><button class="vk-key">I</button><button class="vk-key">O</button><button class="vk-key">P</button>
+            </div>
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;">
+                <button class="vk-key">A</button><button class="vk-key">S</button><button class="vk-key">D</button><button class="vk-key">F</button><button class="vk-key">G</button><button class="vk-key">H</button><button class="vk-key">J</button><button class="vk-key">K</button><button class="vk-key">L</button>
+            </div>
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;">
+                <button class="vk-key">Z</button><button class="vk-key">X</button><button class="vk-key">C</button><button class="vk-key">V</button><button class="vk-key">B</button><button class="vk-key">N</button><button class="vk-key">M</button>
+            </div>
+            <div style="display:flex;gap:6px;justify-content:center;">
+                <button class="vk-key vk-key-num">1</button><button class="vk-key vk-key-num">2</button><button class="vk-key vk-key-num">3</button><button class="vk-key vk-key-num">4</button><button class="vk-key vk-key-num">5</button><button class="vk-key vk-key-num">6</button><button class="vk-key vk-key-num">7</button><button class="vk-key vk-key-num">8</button><button class="vk-key vk-key-num">9</button><button class="vk-key vk-key-num">0</button>
+            </div>
+            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
+                <button class="vk-key vk-key-del" style="background:#f5f5f5;color:#d4380d;">删除</button>
+                <button class="vk-key vk-key-search" style="background:#1677ff;color:#fff;">搜索</button>
+            </div>
         </div>
     </div>
 
@@ -317,6 +338,7 @@
              * @file documents.html
              * @description 文档类型切换交互，点击tab高亮并筛选文件
              *              文件点击弹窗预览详情，支持多种类型
+             *              新增文件搜索交互，支持移动端键盘搜索和清空
              */
             document.addEventListener('DOMContentLoaded', function(){
                 var tabs = document.querySelectorAll('#doc-tabs .doc-tab');
@@ -329,6 +351,7 @@
                     {type:'all', name:'项目计划书.pdf', ext:'pdf'},
                     {type:'special', name:'季度汇报.pptx', ext:'pptx'}
                 ];
+                // --- 文件类型Tab切换 ---
                 tabs.forEach(function(tab){
                     tab.onclick = function(){
                         tabs.forEach(t=>t.classList.remove('active'));
@@ -341,9 +364,14 @@
                             if(f && f.type===t) item.style.display='flex';
                             else item.style.display='none';
                         });
+                        // 切换Tab时清空搜索
+                        var fileSearchInput = document.getElementById('fileSearchInput');
+                        var clearSearchBtn = document.getElementById('clearSearchBtn');
+                        fileSearchInput.value = '';
+                        clearSearchBtn.style.display = 'none';
                     }
                 });
-                // 文件点击弹窗预览
+                // --- 文件点击弹窗预览 ---
                 fileItems.forEach(function(item, idx){
                     item.style.cursor = 'pointer';
                     item.onclick = function(){
@@ -353,7 +381,7 @@
                         showFilePreview(fname, ext);
                     }
                 });
-                // 预览弹窗
+                // --- 文件预览弹窗 ---
                 function showFilePreview(name, ext){
                     // 遮罩
                     let mask = document.getElementById('filePreviewMask');
@@ -404,6 +432,69 @@
                     if(mask) mask.style.display = 'none';
                     if(dialog) dialog.style.display = 'none';
                 }
+                // --- 文件搜索交互 ---
+                /**
+                 * @description 文件搜索交互，支持移动端键盘搜索和清空
+                 */
+                var fileSearchInput = document.getElementById('fileSearchInput');
+                var clearSearchBtn = document.getElementById('clearSearchBtn');
+                // 输入框聚焦时显示清空按钮
+                fileSearchInput.addEventListener('focus', function(){
+                    if(this.value) clearSearchBtn.style.display = 'inline';
+                });
+                // 输入时显示/隐藏清空按钮
+                fileSearchInput.addEventListener('input', function(){
+                    clearSearchBtn.style.display = this.value ? 'inline' : 'none';
+                });
+                // 清空按钮点击，恢复全部文件
+                clearSearchBtn.addEventListener('click', function(){
+                    fileSearchInput.value = '';
+                    clearSearchBtn.style.display = 'none';
+                    fileItems.forEach(function(item){ item.style.display = 'flex'; });
+                });
+                // 监听键盘回车（搜索）事件
+                fileSearchInput.addEventListener('keydown', function(e){
+                    if(e.key === 'Enter'){
+                        doFileSearch();
+                        // 移动端收起键盘
+                        fileSearchInput.blur();
+                    }
+                });
+                /**
+                 * @function doFileSearch
+                 * @description 执行文件名称搜索，支持模糊匹配，结果高亮显示
+                 */
+                function doFileSearch(){
+                    var keyword = fileSearchInput.value.trim();
+                    if(!keyword){
+                        fileItems.forEach(function(item){ item.style.display = 'flex'; });
+                        return;
+                    }
+                    fileItems.forEach(function(item){
+                        var fname = item.querySelector('.file-name').textContent.trim();
+                        if(fname.indexOf(keyword) !== -1){
+                            item.style.display = 'flex';
+                            // 高亮匹配部分
+                            var html = fname.replace(new RegExp(keyword, 'g'), '<span style="background:#ffe58f;">'+keyword+'</span>');
+                            item.querySelector('.file-name').innerHTML = html;
+                        }else{
+                            item.style.display = 'none';
+                            // 恢复原始文件名
+                            var origin = fileTypeMap.find(f=>f.name===fname);
+                            if(origin) item.querySelector('.file-name').innerHTML = origin.name;
+                        }
+                    });
+                }
+                // 失焦时恢复高亮为原始
+                fileSearchInput.addEventListener('blur', function(){
+                    if(!this.value){
+                        fileItems.forEach(function(item){
+                            var fname = item.querySelector('.file-name').textContent.trim();
+                            var origin = fileTypeMap.find(f=>f.name===fname);
+                            if(origin) item.querySelector('.file-name').innerHTML = origin.name;
+                        });
+                    }
+                });
             });
             </script>
             

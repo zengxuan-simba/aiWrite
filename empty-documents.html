@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文档列表空状态</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-white min-h-screen flex flex-col">
+  <!-- 空状态卡片区域 -->
+  <main class="flex-1 flex items-center justify-center">
+    <!--
+      @description 文档列表为空时的空状态卡片，移动端友好，局部居中显示。
+      @author AI助手
+    -->
+    <div class="w-11/12 max-w-sm mx-auto bg-white rounded-2xl shadow-lg flex flex-col items-center py-10 px-6">
+      <!--
+        @description 空状态图标，使用FontAwesome文件夹图标。
+      -->
+      <div class="text-blue-400 mb-4">
+        <i class="fa-regular fa-folder-open fa-3x"></i>
+      </div>
+      <!--
+        @description 空状态主文案。
+      -->
+      <h2 class="text-lg font-semibold text-gray-800 mb-2">暂无文档</h2>
+      <!--
+        @description 空状态补充说明。
+      -->
+      <!-- <p class="text-gray-500 text-sm text-center">您还没有上传或收到任何文档，点击右上角“+”可新建或上传文档。</p> --> 
+    </div>
+  </main>
+  <!-- 底部安全距离 -->
+  <div class="h-8"></div>
+
+  <!-- 底部导航，完全对齐documents.html -->
+  <div class="bottom-nav">
+    <div class="nav-item">
+      <div class="nav-icon"><i class="fas fa-comments"></i></div>
+      <div>问答</div>
+    </div>
+    <div class="nav-item active">
+      <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+      <div>文档</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon"><i class="fas fa-user"></i></div>
+      <div>我的</div>
+    </div>
+  </div>
+  <style>
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 100;
+      height: 83px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: 20px;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #8e8e93;
+      font-size: 10px;
+      transition: color 0.2s;
+    }
+    .nav-item.active {
+      color: #007aff;
+    }
+    .nav-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+  </style>
+</body>
+</html> 

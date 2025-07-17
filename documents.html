@@ -231,15 +231,15 @@
     </div>
 
     <!-- 头部 -->
-    <div class="header">
+    <!--<div class="header">
         <div class="flex justify-center items-center">
             <h1 class="text-xl font-semibold text-gray-800">文档管理</h1>
-            <!--<div class="flex gap-3">
+            <div class="flex gap-3">
                 <i class="fas fa-plus text-blue-500 text-lg"></i>
                 <i class="fas fa-sort text-gray-600 text-lg"></i>
-            </div>-->
+            </div>
         </div>
-    </div>
+    </div>-->  
 
     <!-- 搜索栏 -->
     <div class="search-container">
@@ -299,6 +299,50 @@
                 <h3 class="font-semibold text-gray-800">文档列表</h3>
                 <!--<span class="text-blue-500 text-sm">查看全部</span>-->
             </div>
+            <!-- 分类切换按钮组 -->
+            <div id="doc-tabs" style="display:flex;gap:18px;margin-bottom:10px;padding-left:2px;font-size:15px;">
+                <span class="doc-tab active" data-type="all" style="color:#1677ff;font-weight:600;cursor:pointer;">全部</span>
+                <!--<span class="doc-tab" data-type="group" style="color:#666;cursor:pointer;">集团级</span>-->
+                <span class="doc-tab" data-type="dept" style="color:#666;cursor:pointer;">部门级</span>
+                <span class="doc-tab" data-type="special" style="color:#666;cursor:pointer;">处室级</span>
+                <span class="doc-tab" data-type="personal" style="color:#666;cursor:pointer;">个人级</span>
+            </div>
+            <style>
+                .doc-tab.active { color: #1677ff!important; font-weight: 600; }
+                .doc-tab { transition: color 0.2s; }
+                .doc-tab:hover { color: #1677ff!important; }
+            </style>
+            <script>
+            /**
+             * @file documents.html
+             * @description 文档类型切换交互，点击tab高亮并筛选文件
+             */
+            document.addEventListener('DOMContentLoaded', function(){
+                var tabs = document.querySelectorAll('#doc-tabs .doc-tab');
+                var fileItems = document.querySelectorAll('.file-item');
+                // 文件类型映射（示例，实际可根据后端数据调整）
+                var fileTypeMap = [
+                    {type:'group', name:'项目计划书.pdf'},
+                    {type:'dept', name:'会议记录.docx'},
+                    {type:'special', name:'产品截图.png'},
+                    {type:'personal', name:'销售数据.xlsx'}
+                ];
+                tabs.forEach(function(tab){
+                    tab.onclick = function(){
+                        tabs.forEach(t=>t.classList.remove('active'));
+                        this.classList.add('active');
+                        var t = this.getAttribute('data-type');
+                        fileItems.forEach(function(item, idx){
+                            if(t==='all') { item.style.display='flex'; return; }
+                            var fname = item.querySelector('.file-name').textContent.trim();
+                            var f = fileTypeMap.find(f=>f.name===fname);
+                            if(f && f.type===t) item.style.display='flex';
+                            else item.style.display='none';
+                        });
+                    }
+                });
+            });
+            </script>
             
             <div class="file-item">
                 <div class="file-item-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">

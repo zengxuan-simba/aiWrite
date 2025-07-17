@@ -691,31 +691,51 @@
     }
     </script>
     <script>
-    // 新建对话交互
+    /**
+     * @file chat.html
+     * @description 聊天页面交互逻辑：初始展示欢迎页，点击发送按钮后展示聊天内容，点击右上角“+”恢复欢迎页
+     * @author assistant
+     */
     document.addEventListener('DOMContentLoaded', function(){
+        // 初始渲染欢迎页
+        var chatContainer = document.querySelector('.chat-container');
+        function renderWelcome() {
+            if(chatContainer){
+                chatContainer.innerHTML = `
+                    <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
+                        <span style="display:inline-block;width:48px;height:48px;margin-bottom:18px;background:#f3f7fc;border-radius:12px;overflow:hidden;">
+                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                              <path d="M24 6C13 6 6 13 6 24c0 11 7 18 18 18s18-7 18-18c0-11-7-18-18-18z" fill="#f3f7fc"/>
+                              <path d="M13.5 24c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                              <path d="M13.5 28c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                              <path d="M13.5 32c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#8dc63f" stroke-width="2.2" fill="none"/>
+                            </g>
+                          </svg>
+                        </span>
+                        <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
+                        <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
+                    </div>
+                `;
+            }
+        }
+        renderWelcome();
+        // 发送按钮交互
+        var sendBtn = document.querySelector('.input-container .fa-paper-plane');
+        var input = document.querySelector('.input-container input[type="text"]');
+        if(sendBtn && chatContainer && input){
+            sendBtn.addEventListener('click', function(){
+                var userText = input.value.trim() || '2025年科创任务重点';
+                chatContainer.innerHTML = `
+                    <div style=\"display:flex;justify-content:flex-end;margin-bottom:10px;\">\n                        <div style=\"max-width:80%;background:#e9f3ff;color:#222;padding:8px 16px;border-radius:18px 4px 18px 18px;font-size:15px;line-height:1.7;box-shadow:0 2px 8px rgba(22,119,255,0.06);\">${userText}</div>\n                    </div>\n                    <div style=\"display:flex;align-items:flex-start;\">\n                        <div style=\"width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;\"><i class=\"fas fa-robot\"></i></div>\n                        <div style=\"flex:1;\">\n                            <div style=\"margin-bottom:4px;\">\n                                <div style=\"display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;\">\n                                    <span id=\"material-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleMaterialList()\">检索到4篇相关材料 <span id='material-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>\n                                </div>\n                                <div id=\"material-list\" style=\"display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);\">\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-word\" style=\"color:#3574d4;\"></i>2024年重点科研方向与科创任务.docx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-word\" style=\"color:#3574d4;\"></i>中国移动科技创新管理工作要点.docx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-powerpoint\" style=\"color:#e67c73;\"></i>中国移动科技创新管理工作要点.pptx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-pdf\" style=\"color:#e67c73;\"></i>议题1：2025年科技创新任务和要求.pdf</div>\n                                </div>\n                                <div style=\"display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;\">\n                                    <span id=\"web-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleWebList()\">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>\n                                </div>\n                                <div id=\"web-list\" style=\"display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);\">\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[1] 中国移动新产业加速布局 规范有序推进科技型企业设立</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[2] 中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[3] 定了！2025，中国移动持续构建超80大新格局！</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[4] 中国移动：竞聘笔试题及答案集！</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[5] 三大运营商瞄准2025年重点任务</div>\n                                </div>\n                                <div style=\"color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;\">\n                                    <span id=\"think-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleThinkList()\">深度思考过程<span id='think-arrow' style='font-size:14px;margin-left:2px;'>v</span></span>\n                                </div>\n                                <div id=\"think-list\" style=\"display:none;background:#f5f7fa;border-radius:10px;padding:14px 16px 10px 16px;margin:8px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);color:#444;font-size:15px;line-height:1.8;\">\n                                    好的，我现在需要回答用户关于“2025年科创任务重点”的问题，并且根据提供的搜索结果来生成答案，同时梳理8篇材料。首先，我要依据前面调研和搜集结果，找出其中提到的2025年科技创新的重点任务。<br><br>\n                                    首先，搜索结果中的前三个网页（[1]，[2]，[3]）都来自2025年1月14日至15日的全国科技工作会议，内容最权威。这些网页列举2025年若干科技创新的重点方向，包括基础研究、关键核心技术攻关、加速成果转化、促进科技与产业融合、战略性科技力量部署。这些都是核心任务，需重点引用。<br><br>\n                                    接下来，网页[4]是21世纪经济网的报道，进一步解释了科技攻关的方向，特别是要科技人才一体化改革，以及科技成果转化的加强。这些理解内容可以作为补充，特别是关于科技链和知识成果的分析。<br><br>\n                                    网页[5]重点梳理科技部的工作重点，虽然不是地方页面，但其提到的评价也有借鉴意义。科技成果链出自科创、教育、管理等多部门协作，强调创新链、产业链、资金链的融合，但可能不覆盖最原始的重点，需辩证看待部分观点。<br><br>\n                                    网页[6]、[7]、[8]主要涉及国际科技进展，如量子技术、基因疗养、太空探索等，但用户的问题可能更关注国内的任务重点，因此这些内容只需相对性转化，但如有亮点也可补充。\n                                </div>\n                            </div>\n                            <div style=\"background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;\">\n                                2025年作为“十四五”规划收官和“十五五”规划谋篇的关键年，科技创新任务被定位为驱动新质生产力发展和现代化产业体系建设的核心。结合中央经济工作会议部署及各地科技工作会议的规划，2025年科创任务的重点可归纳为以下六大方向：<br><br>\n                                <b>一、强化体系化科技攻关，突破关键核心技术</b><br>\n                                <b>1. 基础研究与核心技术攻关</b><br>\n                                中央经济工作会议明确将加强基础研究、关键核心技术攻关及超前布局重大科技项目作为重点任务，例如量子信息、集成电路、人工智能等领域。工信部提出统筹推进产业基础再造和重大技术装备攻关工程，聚焦工业母机、高温超导材料等“卡脖子”技术突破。<br>\n                                <b>2. 国家战略科技力量建设</b><br>\n                                国家实验室、大型科学装置等战略平台加快布局，提升原始创新能力。\n                            </div>\n                        </div>\n                    </div>\n                `;
+            });
+        }
+        // 头部右上角“+”按钮交互
         var plusBtn = document.querySelector('.fa-plus-circle');
         if(plusBtn){
             plusBtn.style.cursor = 'pointer';
             plusBtn.onclick = function(){
-                var chatContainer = document.querySelector('.chat-container');
-                if(chatContainer){
-                    chatContainer.innerHTML = `
-                        <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
-                            <span style="display:inline-block;width:48px;height:48px;margin-bottom:18px;background:#f3f7fc;border-radius:12px;overflow:hidden;">
-                              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                  <path d="M24 6C13 6 6 13 6 24c0 11 7 18 18 18s18-7 18-18c0-11-7-18-18-18z" fill="#f3f7fc"/>
-                                  <path d="M13.5 24c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
-                                  <path d="M13.5 28c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
-                                  <path d="M13.5 32c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#8dc63f" stroke-width="2.2" fill="none"/>
-                                </g>
-                              </svg>
-                            </span>
-                            <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
-                            <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
-                        </div>
-                    `;
-                }
+                renderWelcome();
             }
         }
     });

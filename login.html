@@ -157,26 +157,89 @@
         <form autocomplete="off" style="width:100%;">
             <!-- 手机号输入框 -->
             <!-- @input 手机号 -->
-            <input type="tel" class="login-input" placeholder="请输入手机号" maxlength="11" autocomplete="off">
+            <input type="tel" class="login-input" placeholder="请输入手机号" maxlength="11" autocomplete="off" id="phoneInput">
             <!-- 验证码输入区 -->
             <div class="input-row">
-                <!-- @input 图片验证码 -->
-                <input type="text" class="login-input" placeholder="请输入验证码" style="flex:1;" autocomplete="off">
-                <!-- @captcha 验证码图片 -->
-                <img src="https://dummyimage.com/80x40/ced6e0/34495e&text=4*1c7" alt="验证码" class="captcha-img">
+                <input type="text" class="login-input" placeholder="请输入验证码" style="flex:1;" autocomplete="off" id="imgCodeInput">
+                <img src="https://dummyimage.com/80x40/ced6e0/34495e&text=4*1c7" alt="验证码" class="captcha-img" id="captchaImg" style="cursor:pointer;">
             </div>
             <!-- 短信验证码输入区 -->
             <div class="input-row">
-                <!-- @input 短信验证码 -->
-                <input type="text" class="login-input" placeholder="请输入短信验证码" style="flex:1;" autocomplete="off">
-                <!-- @button 获取验证码 -->
+                <input type="text" class="login-input" placeholder="请输入短信验证码" style="flex:1;" autocomplete="off" id="smsCodeInput">
                 <button type="button" class="sms-btn">获取验证码</button>
             </div>
             <!-- 登录按钮 -->
-            <button type="submit" class="login-btn">登 录</button>
+            <button type="submit" class="login-btn" id="loginBtn">登 录</button>
         </form>
+        <div id="loginError" style="color:#ff4d4f;font-size:14px;text-align:center;margin-top:10px;display:none;"></div>
         <!-- 辅助文案 -->
         <!-- <div class="login-tip">未注册手机号将自动创建账号</div> -->
     </div>
+    <script>
+    /**
+     * @file login.html
+     * @description 登录表单校验与验证码切换，移动端友好
+     */
+    document.addEventListener('DOMContentLoaded', function(){
+      var phone = document.getElementById('phoneInput');
+      var imgCode = document.getElementById('imgCodeInput');
+      var smsCode = document.getElementById('smsCodeInput');
+      var loginBtn = document.getElementById('loginBtn');
+      var captchaImg = document.getElementById('captchaImg');
+      var loginError = document.getElementById('loginError');
+      // 验证码图片字符池
+      var codePool = ['4*1c7', '8a2b9', 'k3Lm5', '7g5h2', '9z8x1', '2q4w6', 'm8n3p', '5t6y7'];
+      var currentCode = '4*1c7';
+      // 切换验证码图片
+      function changeCaptcha() {
+        var idx = Math.floor(Math.random() * codePool.length);
+        currentCode = codePool[idx];
+        captchaImg.src = 'https://dummyimage.com/80x40/ced6e0/34495e&text=' + currentCode;
+      }
+      captchaImg.addEventListener('click', function(){
+        changeCaptcha();
+      });
+      // 登录校验
+      loginBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        loginError.style.display = 'none';
+        var phoneVal = phone.value.trim();
+        var imgCodeVal = imgCode.value.trim();
+        var smsCodeVal = smsCode.value.trim();
+        // 手机号正则校验
+        var phoneReg = /^1[3-9]\d{9}$/;
+        if(!phoneReg.test(phoneVal)){
+          loginError.textContent = '请输入正确的手机号';
+          loginError.style.display = 'block';
+          phone.focus();
+          return;
+        }
+        // 验证码校验
+        if(imgCodeVal.toLowerCase() !== currentCode.toLowerCase()){
+          loginError.textContent = '验证码输入错误';
+          loginError.style.display = 'block';
+          imgCode.focus();
+          changeCaptcha();
+          return;
+        }
+        // 短信验证码6位数字
+        if(!/^\d{6}$/.test(smsCodeVal)){
+          loginError.textContent = '请输入6位短信验证码';
+          loginError.style.display = 'block';
+          smsCode.focus();
+          return;
+        }
+        // 校验通过
+        loginError.style.display = 'none';
+        loginBtn.textContent = '登录中...';
+        loginBtn.disabled = true;
+        setTimeout(function(){
+          loginBtn.textContent = '登 录';
+          loginBtn.disabled = false;
+          alert('登录成功（模拟）');
+        }, 1200);
+      });
+    });
+    </script>
 </body>
 </html> 

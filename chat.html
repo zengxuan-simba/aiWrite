@@ -239,6 +239,15 @@
     <!-- 头部 -->
     <div class="header">
         <div class="flex items-center justify-between">
+            <!-- 抽屉按钮 -->
+            <button id="drawerBtn" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;outline:none;cursor:pointer;margin-left:-8px;">
+                <span style="display:inline-block;width:22px;height:22px;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                        <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                    </svg>
+                </span>
+            </button>
             <!--<i class="fas fa-bars text-2xl text-gray-700"></i>-->
             <div class="relative flex-1 flex justify-center">
                 <button id="modelSelectBtn" class="flex items-center gap-1 text-lg font-semibold text-gray-800 focus:outline-none">
@@ -739,6 +748,64 @@
             }
         }
     });
+    /**
+     * @description 聊天页面抽屉交互，点击左上角按钮展开/收起历史对话侧边栏，适配移动端
+     */
+    document.addEventListener('DOMContentLoaded', function(){
+        var drawerBtn = document.getElementById('drawerBtn');
+        var drawerMask = document.getElementById('drawerMask');
+        var drawerSidebar = document.getElementById('drawerSidebar');
+        if(drawerBtn && drawerMask && drawerSidebar){
+            drawerBtn.onclick = function(e){
+                e.stopPropagation();
+                drawerMask.style.display = 'block';
+                drawerSidebar.style.display = 'block';
+                setTimeout(function(){
+                    drawerSidebar.style.transform = 'translateX(0)';
+                }, 10);
+            };
+            window.hideDrawer = function(){
+                drawerSidebar.style.transform = 'translateX(-100%)';
+                setTimeout(function(){
+                    drawerSidebar.style.display = 'none';
+                    drawerMask.style.display = 'none';
+                }, 200);
+            };
+            // 初始隐藏时侧边栏左移
+            drawerSidebar.style.transform = 'translateX(-100%)';
+        }
+    });
     </script>
+    <!-- 侧边栏抽屉和遮罩，插入到body中，确保能被JS获取到 -->
+    <div id="drawerMask" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);transition:all 0.2s;" onclick="hideDrawer()"></div>
+    <div id="drawerSidebar" style="display:none;position:fixed;z-index:3001;left:0;top:0;width:76vw;max-width:320px;height:100vh;background:#fff;box-shadow:2px 0 24px rgba(0,0,0,0.10);border-top-right-radius:18px;border-bottom-right-radius:18px;transition:all 0.2s;overflow-y:auto;">
+        <div style="height:56px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #f5f5f5;">
+            <button onclick="hideDrawer()" style="background:transparent;border:none;outline:none;cursor:pointer;padding:0;margin-right:8px;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/><rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/></svg>
+            </button>
+            <span style="font-size:17px;font-weight:600;color:#222;">历史对话</span>
+        </div>
+        <div style="padding:0 0 0 0;">
+            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">30天内</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">五一出行旅游攻略推荐</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">产品测试报告分类与编写建议</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">你好</div>
+            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年6月</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">Vue3数组排序代码实现</div>
+            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年5月</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">2025年科技创新任务重点总结</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">五一云南自助游详细行程规划</div>
+            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年4月</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">AI写作产品文档框架示例</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">AI写作工具原理型需求文档</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">科技创新新文档管理系统AI优化</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">AI写作工具PRD文档模板</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">AI写作工具原型设计与实现</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">中国移动科创创新助力第二增长极</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">小米人股东原始权益情况总结</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">中国移动云原生架构创新实践</div>
+            <div style="font-size:16px;color:#222;padding:6px 18px;">中国移动数字化转型案例</div>
+        </div>
+    </div>
 </body>
 </html> 

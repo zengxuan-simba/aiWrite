@@ -38,6 +38,16 @@
             height: calc(100vh - 44px - 60px - 80px - 83px);
             overflow-y: auto;
             padding: 20px;
+            /* 隐藏滚动条（Webkit） */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        .chat-container::-webkit-scrollbar {
+            display: none;
+        }
+        /* 聊天容器内容为空时隐藏滚动条 */
+        .chat-container:empty {
+            overflow: hidden;
         }
         .message {
             margin-bottom: 20px;

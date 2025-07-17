@@ -315,7 +315,15 @@
         </div>-->
 
         <!-- 文件列表 -->
-        <div class="file-list">
+        <div class="file-list" style="position:relative;min-height:320px;">
+            <!-- 卡片式loading动画，初次进入显示，3秒后隐藏 -->
+            <div id="fileListLoading" style="position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.85);z-index:10;">
+                <div style="width:160px;height:140px;background:#fafbfc;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                    <div style="width:48px;height:48px;border-radius:50%;border:4px solid #e0e0e0;border-top:4px solid #1677ff;animation:spin 1s linear infinite;"></div>
+                    <div style="margin-top:18px;color:#888;font-size:16px;">加载中...</div>
+                </div>
+                <style>@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}</style>
+            </div>
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-semibold text-gray-800">文档列表</h3>
                 <!--<span class="text-blue-500 text-sm">查看全部</span>-->
@@ -495,6 +503,20 @@
                         });
                     }
                 });
+            });
+            // 文件列表区域loading动画，3秒后显示内容
+            document.addEventListener('DOMContentLoaded', function(){
+                var fileListLoading = document.getElementById('fileListLoading');
+                var fileList = document.querySelector('.file-list');
+                if(fileListLoading && fileList){
+                    // 隐藏文件项，仅显示loading
+                    var fileItems = fileList.querySelectorAll('.file-item');
+                    fileItems.forEach(function(item){ item.style.display = 'none'; });
+                    setTimeout(function(){
+                        fileListLoading.style.display = 'none';
+                        fileItems.forEach(function(item){ item.style.display = 'flex'; });
+                    }, 1500);
+                }
             });
             </script>
             

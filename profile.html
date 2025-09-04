@@ -35,7 +35,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .main-content {
-            height: calc(100vh - 44px - 60px - 20px); 
+            height: calc(100vh - 44px - 20px); 
             overflow-y: auto;
             padding: 20px;
         }
@@ -128,31 +128,6 @@
             text-align: center;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(255,215,0,0.3);
-        }
-        .bottom-nav {
-            height: 83px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: 20px;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #8e8e93;
-            font-size: 10px;
-            transition: color 0.2s;
-        }
-        .nav-item.active {
-            color: #007aff;
-        }
-        .nav-icon {
-            font-size: 24px;
-            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -382,21 +357,6 @@
         </div>
     </div>
 
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item">
-            <div class="nav-icon"><i class="fas fa-comments"></i></div>
-            <div>问答</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
-            <div>文档</div>
-        </div>
-        <div class="nav-item active">
-            <div class="nav-icon"><i class="fas fa-user"></i></div>
-            <div>我的</div>
-        </div>
-    </div>
     <!-- 弹窗遮罩和弹窗 -->
     <div id="modalMask" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);"></div>
     <div id="aboutModal" style="display:none;position:fixed;z-index:3001;left:50%;top:50%;transform:translate(-50%,-50%);width:86vw;max-width:340px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0 0 18px 0;text-align:center;overflow:hidden;">
@@ -415,7 +375,7 @@
     <script>
     /**
      * @file profile.html
-     * @description 个人中心“关于我们”与“退出登录”按钮弹窗交互，移动端友好
+     * @description 个人中心"关于我们"与"退出登录"按钮弹窗交互，移动端友好
      */
     document.addEventListener('DOMContentLoaded', function(){
         var aboutBtn = document.getElementById('aboutUsBtn');

@@ -233,6 +233,142 @@
         body {
             padding-bottom: 83px;
         }
+        /* 侧边栏样式 */
+        .drawer-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 76vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 24px rgba(0,0,0,0.10);
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+            transition: all 0.2s;
+            overflow-y: auto;
+            z-index: 3001;
+            transform: translateX(-100%);
+        }
+        .drawer-sidebar.show {
+            transform: translateX(0);
+        }
+        .drawer-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.18);
+            transition: all 0.2s;
+            z-index: 3000;
+            display: none;
+        }
+        .drawer-mask.show {
+            display: block;
+        }
+        .drawer-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .drawer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222;
+        }
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 8px;
+        }
+        .nav-section {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .nav-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+        .nav-btn:hover {
+            background: #f8f9fa;
+        }
+        .nav-btn.active:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .nav-btn-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .history-section {
+            padding: 18px;
+        }
+        .history-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .history-section-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+        .history-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+        .history-item-title {
+            font-size: 15px;
+            color: #222;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .history-item-time {
+            font-size: 12px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -258,7 +394,6 @@
                     </svg>
                 </span>
             </button>
-            <!--<i class="fas fa-bars text-2xl text-gray-700"></i>-->
             <div class="relative flex-1 flex justify-center">
                 <button id="modelSelectBtn" class="flex items-center gap-1 text-lg font-semibold text-gray-800 focus:outline-none">
                 DeepSeek<i class="fas fa-chevron-down text-xs ml-1"></i>
@@ -266,72 +401,19 @@
                 <div id="modelDropdown" class="hidden absolute left-1/2 -translate-x-1/2 top-10 w-56 bg-white rounded-2xl shadow-lg border border-gray-100 z-50">
                     <div class="px-5 py-4 cursor-pointer hover:bg-gray-50" data-model="Hunyuan">
                         <div class="font-semibold text-gray-900">通义QW</div>
-                        <!--<div class="text-xs text-gray-500 mt-1">全能处理，深度思考</div>-->
                     </div>
                     <div class="px-5 py-4 cursor-pointer hover:bg-gray-50" data-model="DeepSeek">
                         <div class="font-semibold text-gray-900">DeepSeek</div>
-                        <!--<div class="text-xs text-gray-500 mt-1">深度思考</div>-->
                     </div>
                 </div>
             </div>
-            <i class="fas fa-plus-circle" style="font-size:26px;color:#222;"></i>
+            <i class="fas fa-plus-circle" id="newChatBtn" style="font-size:26px;color:#222;cursor:pointer;"></i>
         </div>
     </div>
 
     <!-- 聊天容器 -->
-    <div class="chat-container" style="padding-top:12px;">
-        <!-- 用户输入气泡 -->
-        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
-            <div style="max-width:80%;background:#e9f3ff;color:#222;padding:8px 16px;border-radius:18px 4px 18px 18px;font-size:15px;line-height:1.7;box-shadow:0 2px 8px rgba(22,119,255,0.06);">2025年科创任务重点</div>
-        </div>
-        <!-- AI回复区域 -->
-        <div style="display:flex;align-items:flex-start;">
-            <!-- 机器人icon -->
-            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;"><i class="fas fa-robot"></i></div>
-            <div style="flex:1;">
-                <!-- AI回复提示 -->
-                <div style="margin-bottom:4px;">
-                    <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
-                        <span id="material-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleMaterialList()">检索到4篇相关材料 <span id='material-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
-                    </div>
-                    <div id="material-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>2024年重点科研方向与科创任务.docx</div>
-                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>中国移动科技创新管理工作要点.docx</div>
-                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-powerpoint" style="color:#e67c73;"></i>中国移动科技创新管理工作要点.pptx</div>
-                        <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-pdf" style="color:#e67c73;"></i>议题1：2025年科技创新任务和要求.pdf</div>
-                    </div>
-                    <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
-                        <span id="web-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleWebList()">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
-                    </div>
-                    <div id="web-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[1] 中国移动新产业加速布局 规范有序推进科技型企业设立</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[2] 中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[3] 定了！2025，中国移动持续构建超80大新格局！</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[4] 中国移动：竞聘笔试题及答案集！</div>
-                        <div style="color:#222;font-size:14px;margin-bottom:4px;">[5] 三大运营商瞄准2025年重点任务</div>
-                    </div>
-                    <div style="color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;">
-                        <span id="think-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleThinkList()">深度思考过程<span id='think-arrow' style='font-size:14px;margin-left:2px;'>v</span></span>
-                    </div>
-                    <div id="think-list" style="display:none;background:#f5f7fa;border-radius:10px;padding:14px 16px 10px 16px;margin:8px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);color:#444;font-size:15px;line-height:1.8;">
-                        好的，我现在需要回答用户关于"2025年科创任务重点"的问题，并且根据提供的搜索结果来生成答案，同时梳理8篇材料。首先，我要依据前面调研和搜集结果，找出其中提到的2025年科技创新的重点任务。<br><br>
-                        首先，搜索结果中的前三个网页（[1]，[2]，[3]）都来自2025年1月14日至15日的全国科技工作会议，内容最权威。这些网页列举2025年若干科技创新的重点方向，包括基础研究、关键核心技术攻关、加速成果转化、促进科技与产业融合、战略性科技力量部署。这些都是核心任务，需重点引用。<br><br>
-                        接下来，网页[4]是21世纪经济网的报道，进一步解释了科技攻关的方向，特别是要科技人才一体化改革，以及科技成果转化的加强。这些理解内容可以作为补充，特别是关于科技链和知识成果的分析。<br><br>
-                        网页[5]重点梳理科技部的工作重点，虽然不是地方页面，但其提到的评价也有借鉴意义。科技成果链出自科创、教育、管理等多部门协作，强调创新链、产业链、资金链的融合，但可能不覆盖最原始的重点，需辩证看待部分观点。<br><br>
-                        网页[6]、[7]、[8]主要涉及国际科技进展，如量子技术、基因疗养、太空探索等，但用户的问题可能更关注国内的任务重点，因此这些内容只需相对性转化，但如有亮点也可补充。
-                    </div>
-                </div>
-                <!-- AI助手回复气泡 -->
-                <div style="background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;">
-                    2025年作为"十四五"规划收官和"十五五"规划谋篇的关键年，科技创新任务被定位为驱动新质生产力发展和现代化产业体系建设的核心。结合中央经济工作会议部署及各地科技工作会议的规划，2025年科创任务的重点可归纳为以下六大方向：<br><br>
-                    <b>一、强化体系化科技攻关，突破关键核心技术</b><br>
-                    <b>1. 基础研究与核心技术攻关</b><br>
-                    中央经济工作会议明确将加强基础研究、关键核心技术攻关及超前布局重大科技项目作为重点任务，例如量子信息、集成电路、人工智能等领域。工信部提出统筹推进产业基础再造和重大技术装备攻关工程，聚焦工业母机、高温超导材料等"卡脖子"技术突破。<br>
-                    <b>2. 国家战略科技力量建设</b><br>
-                    国家实验室、大型科学装置等战略平台加快布局，提升原始创新能力。
-                </div>
-            </div>
-        </div>
+    <div class="chat-container" id="chatContainer">
+        <!-- 初始欢迎页面内容将通过JavaScript动态加载 -->
     </div>
 
     <!-- 输入区域 -->
@@ -350,29 +432,90 @@
                 </div>
             </div>
         </div>
-        <!-- 网页弹窗遮罩和弹窗 -->
-        <div id="webMask" style="display:none;position:fixed;z-index:2000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.35);" onclick="hideWebDialog()"></div>
-        <div id="webDialog" style="display:none;position:fixed;z-index:2001;left:50%;top:-200%;transform:translate(-50%,-50%);width:90vw;max-width:380px;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:32px 20px 18px 20px;text-align:center;">
-            <div style="font-size:18px;font-weight:700;margin-bottom:18px;">您即将离开本应用，跳转到第三方网站</div>
-            <div style="color:#444;font-size:15px;line-height:1.7;margin-bottom:28px;">本应用出于为您提供便利的目的向您提供第三方链接，我们不对第三方网站的内容负责，请您审慎访问，保护好您的信息及财产安全。</div>
-            <div style="display:flex;gap:16px;justify-content:center;">
-                <button onclick="hideWebDialog()" style="flex:1;height:44px;background:#f5f5f5;color:#222;font-size:16px;font-weight:500;border:none;border-radius:10px;">取消</button>
-                <button onclick="showWebLayer()" style="flex:1;height:44px;background:#222;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:10px;">继续访问</button>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <div class="nav-icon"><i class="fas fa-comments"></i></div>
+            <div>问答</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+            <div>文档</div>
+        </div>
+        <div class="nav-item">
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+            <div>我的</div>
+        </div>
+    </div>
+
+    <!-- 侧边栏遮罩 -->
+    <div class="drawer-mask" id="drawerMask"></div>
+    
+    <!-- 侧边栏 -->
+    <div class="drawer-sidebar" id="drawerSidebar">
+        <div class="drawer-header">
+            <button class="drawer-close-btn" onclick="hideDrawer()">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                    <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                </svg>
+            </button>
+            <span class="drawer-title">导航菜单</span>
+        </div>
+        
+        <!-- 导航区域 -->
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <div class="nav-btn active" onclick="navigateTo('chat')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="nav-btn-text">问答</div>
+            </div>
+            <div class="nav-btn" onclick="navigateTo('documents')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="nav-btn-text">文档</div>
+            </div>
+            <div class="nav-btn" onclick="navigateTo('profile')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="nav-btn-text">我的</div>
             </div>
         </div>
-        <!-- 网页内容浮层 -->
-        <div id="webLayerMask" style="display:none;position:fixed;z-index:2100;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);" onclick="hideWebLayer()"></div>
-        <div id="webLayer" style="display:none;position:fixed;z-index:2101;left:50%;top:-150%;transform:translate(-50%,-50%);width:98vw;max-width:480px;height:90vh;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);overflow:hidden;display:flex;flex-direction:column;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px 0 18px;background:#fff;">
-                <div style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">全国科技工作会议第二次全体会议召开 全面启动新一轮科技体制改革</div>
-                <i class="fas fa-times text-gray-400 text-xl cursor-pointer" onclick="hideWebLayer()"></i>
+        
+        <!-- 历史对话区域 -->
+        <div class="history-section">
+            <div class="history-section-title">
+                <svg class="history-section-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" fill="#888"/>
+                    <path d="M8.5 4H7v5l4.25 2.52.75-1.23L8.5 8.5V4z" fill="#888"/>
+                </svg>
+                历史对话
             </div>
-            <div style="flex:1;overflow-y:auto;padding:0 18px 18px 18px;">
-                <div style="color:#222;font-size:15px;line-height:1.8;margin-top:10px;">
-                    <b>2025年是全面落实全国科技大会精神、加快建设科技强国的关键之年。</b>记者从14日在京举行的全国科技工作会议第二次全体会议上获悉：2025年我国将坚持"四个面向"，发挥新型举国体制优势，全面加强科技布局和攻关，全面启动新一轮科技体制改革，着力提升体系化科技创新能力，有力支撑高质量发展、保障高水平安全。<br><br>
-                    会议提出，2025年，要建立科技强国建设任务清单和路线图，研究编制"十五五"国家科技创新规划和专项规划，构建组织策源科技重大项目，加快建设国家战略科技力量。大力加强基础研究，强化关键核心技术攻关，推动科技成果转化和产业化。<br><br>
-                    <b>（内容为示例，实际可替换为iframe或真实网页内容）</b>
-                </div>
+            <div class="history-item" onclick="loadHistoryChat('如何提高工作效率?')">
+                <div class="history-item-title">如何提高工作效率?</div>
+                <div class="history-item-time">2024-01-15 14:30</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('Python编程入门指南')">
+                <div class="history-item-title">Python编程入门指南</div>
+                <div class="history-item-time">2024-01-14 16:45</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('健康饮食建议')">
+                <div class="history-item-title">健康饮食建议</div>
+                <div class="history-item-time">2024-01-13 10:20</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('投资理财基础知识')">
+                <div class="history-item-title">投资理财基础知识</div>
+                <div class="history-item-time">2024-01-12 15:10</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('学习新技能的方法')">
+                <div class="history-item-title">学习新技能的方法</div>
+                <div class="history-item-time">2024-01-11 09:20</div>
             </div>
         </div>
     </div>
@@ -396,24 +539,129 @@
             });
         });
     }
-    </script>
 
-    <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <div class="nav-item active">
-            <div class="nav-icon"><i class="fas fa-comments"></i></div>
-            <div>问答</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
-            <div>文档</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon"><i class="fas fa-user"></i></div>
-            <div>我的</div>
-        </div>
-    </div>
-    <script>
+    // 侧边栏交互
+    const drawerBtn = document.getElementById('drawerBtn');
+    const drawerMask = document.getElementById('drawerMask');
+    const drawerSidebar = document.getElementById('drawerSidebar');
+    
+    drawerBtn.addEventListener('click', function() {
+        drawerMask.classList.add('show');
+        drawerSidebar.classList.add('show');
+    });
+    
+    function hideDrawer() {
+        drawerMask.classList.remove('show');
+        drawerSidebar.classList.remove('show');
+    }
+    
+    drawerMask.addEventListener('click', hideDrawer);
+
+    // 导航功能
+    function navigateTo(page) {
+        hideDrawer();
+        if (page === 'chat') {
+            // 当前页面，无需跳转
+            return;
+        } else if (page === 'documents') {
+            window.location.href = 'documents.html';
+        } else if (page === 'profile') {
+            window.location.href = 'profile.html';
+        }
+    }
+
+    // 历史对话加载功能
+    function loadHistoryChat(title) {
+        hideDrawer();
+        const chatContainer = document.getElementById('chatContainer');
+        
+        // 模拟"2025年科创任务重点"对话内容
+        chatContainer.innerHTML = `
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+                <div style="max-width:80%;background:#e9f3ff;color:#222;padding:8px 16px;border-radius:18px 4px 18px 18px;font-size:15px;line-height:1.7;box-shadow:0 2px 8px rgba(22,119,255,0.06);">${title}</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;">
+                <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;"><i class="fas fa-robot"></i></div>
+                <div style="flex:1;">
+                    <div style="margin-bottom:4px;">
+                        <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
+                            <span id="material-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleMaterialList()">检索到4篇相关材料 <span id='material-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                        </div>
+                        <div id="material-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                            <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>2024年重点科研方向与科创任务.docx</div>
+                            <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-word" style="color:#3574d4;"></i>中国移动科技创新管理工作要点.docx</div>
+                            <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-powerpoint" style="color:#e67c73;"></i>中国移动科技创新管理工作要点.pptx</div>
+                            <div style="display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;"><i class="fas fa-file-pdf" style="color:#e67c73;"></i>议题1：2025年科技创新任务和要求.pdf</div>
+                        </div>
+                        <div style="display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;">
+                            <span id="web-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleWebList()">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>
+                        </div>
+                        <div id="web-list" style="display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                            <div style="color:#222;font-size:14px;margin-bottom:4px;">[1] 中国移动新产业加速布局 规范有序推进科技型企业设立</div>
+                            <div style="color:#222;font-size:14px;margin-bottom:4px;">[2] 中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>
+                            <div style="color:#222;font-size:14px;margin-bottom:4px;">[3] 定了！2025，中国移动持续构建超80大新格局！</div>
+                            <div style="color:#222;font-size:14px;margin-bottom:4px;">[4] 中国移动：竞聘笔试题及答案集！</div>
+                            <div style="color:#222;font-size:14px;margin-bottom:4px;">[5] 三大运营商瞄准2025年重点任务</div>
+                        </div>
+                        <div style="color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;">
+                            <span id="think-toggle" style="cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;" onmouseover="this.style.color='#1677ff'" onmouseout="this.style.color='#888'" onclick="toggleThinkList()">深度思考过程<span id='think-arrow' style='font-size:14px;margin-left:2px;'>v</span></span>
+                        </div>
+                        <div id="think-list" style="display:none;background:#f5f7fa;border-radius:10px;padding:14px 16px 10px 16px;margin:8px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);color:#444;font-size:15px;line-height:1.8;">
+                            好的，我现在需要回答用户关于"${title}"的问题，并且根据提供的搜索结果来生成答案，同时梳理8篇材料。首先，我要依据前面调研和搜集结果，找出其中提到的2025年科技创新的重点任务。<br><br>
+                            首先，搜索结果中的前三个网页（[1]，[2]，[3]）都来自2025年1月14日至15日的全国科技工作会议，内容最权威。这些网页列举2025年若干科技创新的重点方向，包括基础研究、关键核心技术攻关、加速成果转化、促进科技与产业融合、战略性科技力量部署。这些都是核心任务，需重点引用。<br><br>
+                            接下来，网页[4]是21世纪经济网的报道，进一步解释了科技攻关的方向，特别是要科技人才一体化改革，以及科技成果转化的加强。这些理解内容可以作为补充，特别是关于科技链和知识成果的分析。<br><br>
+                            网页[5]重点梳理科技部的工作重点，虽然不是地方页面，但其提到的评价也有借鉴意义。科技成果链出自科创、教育、管理等多部门协作，强调创新链、产业链、资金链的融合，但可能不覆盖最原始的重点，需辩证看待部分观点。<br><br>
+                            网页[6]、[7]、[8]主要涉及国际科技进展，如量子技术、基因疗养、太空探索等，但用户的问题可能更关注国内的任务重点，因此这些内容只需相对性转化，但如有亮点也可补充。
+                        </div>
+                    </div>
+                    <div style="background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;">
+                        2025年作为"十四五"规划收官和"十五五"规划谋篇的关键年，科技创新任务被定位为驱动新质生产力发展和现代化产业体系建设的核心。结合中央经济工作会议部署及各地科技工作会议的规划，2025年科创任务的重点可归纳为以下六大方向：<br><br>
+                        <b>一、强化体系化科技攻关，突破关键核心技术</b><br>
+                        <b>1. 基础研究与核心技术攻关</b><br>
+                        中央经济工作会议明确将加强基础研究、关键核心技术攻关及超前布局重大科技项目作为重点任务，例如量子信息、集成电路、人工智能等领域。工信部提出统筹推进产业基础再造和重大技术装备攻关工程，聚焦工业母机、高温超导材料等"卡脖子"技术突破。<br>
+                        <b>2. 国家战略科技力量建设</b><br>
+                        国家实验室、大型科学装置等战略平台加快布局，提升原始创新能力。
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 初始加载欢迎页面
+    function loadWelcomePage() {
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.innerHTML = `
+            <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
+                <span style="display:inline-block;width:48px;height:48px;margin-bottom:18px;background:#f3f7fc;border-radius:12px;overflow:hidden;">
+                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g>
+                      <path d="M24 6C13 6 6 13 6 24c0 11 7 18 18 18s18-7 18-18c0-11-7-18-18-18z" fill="#f3f7fc"/>
+                      <path d="M13.5 24c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                      <path d="M13.5 28c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
+                      <path d="M13.5 32c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#8dc63f" stroke-width="2.2" fill="none"/>
+                    </g>
+                  </svg>
+                </span>
+                <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
+                <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
+            </div>
+        `;
+    }
+
+    // 页面加载时显示欢迎页面
+    document.addEventListener('DOMContentLoaded', function() {
+        loadWelcomePage();
+        
+        // 绑定右上角"+"按钮点击事件
+        const newChatBtn = document.getElementById('newChatBtn');
+        if (newChatBtn) {
+            newChatBtn.addEventListener('click', function() {
+                loadWelcomePage();
+            });
+        }
+    });
+
+    // 切换功能
     function toggleMaterialList() {
         var list = document.getElementById('material-list');
         var arrow = document.getElementById('material-arrow');
@@ -425,6 +673,7 @@
             arrow.innerHTML = '&gt;';
         }
     }
+    
     function toggleWebList() {
         var list = document.getElementById('web-list');
         var arrow = document.getElementById('web-arrow');
@@ -436,6 +685,7 @@
             arrow.innerHTML = '&gt;';
         }
     }
+    
     function toggleThinkList() {
         var list = document.getElementById('think-list');
         var arrow = document.getElementById('think-arrow');
@@ -447,416 +697,6 @@
             arrow.innerHTML = 'v';
         }
     }
-    // 网页弹窗与浮层交互
-    function showWebDialog() {
-        document.getElementById('webDialog').style.display = 'block';
-        document.getElementById('webMask').style.display = 'block';
-    }
-    function hideWebDialog() {
-        document.getElementById('webDialog').style.display = 'none';
-        document.getElementById('webMask').style.display = 'none';
-    }
-    function showWebLayer() {
-        hideWebDialog();
-        document.getElementById('webLayer').style.display = 'flex';
-        document.getElementById('webLayerMask').style.display = 'block';
-    }
-    function hideWebLayer() {
-        document.getElementById('webLayer').style.display = 'none';
-        document.getElementById('webLayerMask').style.display = 'none';
-    }
-    // 页面加载时隐藏网页内容浮层，防止自动弹出
-    window.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('webLayer').style.display = 'none';
-        document.getElementById('webLayerMask').style.display = 'none';
-    });
-    // 绑定网页列表项点击事件
-    function bindWebListClick() {
-        var webList = document.getElementById('web-list');
-        if(webList) {
-            var items = webList.querySelectorAll('div');
-            items.forEach(function(item){
-                item.onclick = function(e){
-                    e.stopPropagation();
-                    showWebDialog();
-                };
-            });
-        }
-    }
-    // 保证每次展开网页列表都绑定事件
-    const origToggleWebList = toggleWebList;
-    toggleWebList = function() {
-        origToggleWebList();
-        setTimeout(bindWebListClick, 0);
-    }
-    // 材料文档弹窗交互
-    function showMaterialDialog(title) {
-        // 创建遮罩
-        let mask = document.getElementById('materialMask');
-        if (!mask) {
-            mask = document.createElement('div');
-            mask.id = 'materialMask';
-            mask.style = 'display:block;position:fixed;z-index:2200;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);';
-            mask.onclick = hideMaterialDialog;
-            document.body.appendChild(mask);
-        } else {
-            mask.style.display = 'block';
-        }
-        // 创建弹窗
-        let dialog = document.getElementById('materialDialog');
-        if (!dialog) {
-            dialog = document.createElement('div');
-            dialog.id = 'materialDialog';
-            dialog.style = 'display:block;position:fixed;z-index:2201;left:50%;top:45%;transform:translate(-50%,-50%);width:96vw;max-width:420px;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0;text-align:center;overflow:hidden;';
-            dialog.innerHTML = `
-                <div style="display:flex;align-items:center;justify-content:center;position:relative;height:48px;border-bottom:1px solid #f0f0f0;background:#fff;">
-                    <div id="materialDialogTitle" style="font-size:16px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 40px;">文档标题</div>
-                    <i class="fas fa-times" style="position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px;color:#888;cursor:pointer;" onclick="hideMaterialDialog()"></i>
-                </div>
-                <div style="padding:18px 10px 18px 10px;overflow-y:auto;max-height:62vh;">
-                    <div style='background:#fff;border-radius:12px;padding:18px 12px 18px 12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:left;position:relative;'>
-                        <div style='position:absolute;top:10px;right:14px;font-size:12px;color:#888;'>1 / 28</div>
-                        <div style='font-size:18px;font-weight:700;text-align:center;margin-bottom:8px;'>2024 重点科研方向与科创任务</div>
-                        <div style='font-size:14px;color:#444;text-align:center;margin-bottom:8px;'>技术部（重大科技专项办公室）</div>
-                        <div style='font-size:15px;color:#222;line-height:2;'>2024年是"十四五"规划实施的关键之年，也是公司实现2025年创建世界一流"力量更大"战略目标的攻坚之年。2024年科技创新工作的总体思路是：深入贯彻习近平新时代中国特色社会主义思想，全国两会和集团工作会精神，加快培育壮大战略性新兴产业，围绕"筑基-高峰-转化"创新体系，建强一流科技创新能力体系，夯实基础研究、关键核心技术攻关和成果转化工作，升级创新体系，着力发挥科技引领、产业控制、安全支撑三作用，勇担战略使命，聚焦原创、突破性、高能级新质生产力，构建现代化产业链图谱，数字中国自主力量，海外平进追赶国际科技创新前沿高点，为中国式现代化建设贡献中国移动力量。</div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(dialog);
-        } else {
-            dialog.style.display = 'block';
-        }
-        document.getElementById('materialDialogTitle').innerText = title;
-    }
-    function hideMaterialDialog() {
-        let mask = document.getElementById('materialMask');
-        let dialog = document.getElementById('materialDialog');
-        if(mask) mask.style.display = 'none';
-        if(dialog) dialog.style.display = 'none';
-    }
-    // 绑定材料列表项点击事件
-    function bindMaterialListClick() {
-        var materialList = document.getElementById('material-list');
-        if(materialList) {
-            var items = materialList.querySelectorAll('div');
-            items.forEach(function(item){
-                item.onclick = function(e){
-                    e.stopPropagation();
-                    showMaterialDialog(this.textContent.trim());
-                };
-            });
-        }
-    }
-    // 保证每次展开材料列表都绑定事件
-    const origToggleMaterialList = toggleMaterialList;
-    toggleMaterialList = function() {
-        origToggleMaterialList();
-        setTimeout(bindMaterialListClick, 0);
-    }
-    // 文件选择弹层交互
-    function showFileSelector() {
-        let mask = document.getElementById('fileSelectorMask');
-        if (!mask) {
-            mask = document.createElement('div');
-            mask.id = 'fileSelectorMask';
-            mask.style = 'display:block;position:fixed;z-index:2300;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);';
-            mask.onclick = hideFileSelector;
-            document.body.appendChild(mask);
-        } else {
-            mask.style.display = 'block';
-        }
-        let panel = document.getElementById('fileSelectorPanel');
-        if (!panel) {
-            panel = document.createElement('div');
-            panel.id = 'fileSelectorPanel';
-            panel.style = 'display:block;position:fixed;z-index:2301;left:50%;top:50%;transform:translate(-50%,-50%);width:98vw;max-width:520px;max-height:88vh;background:#fff;border-radius:18px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0;overflow:hidden;';
-            panel.innerHTML = `
-                <div style='padding:0 0 0 0;background:#fff;'>
-                    <div style='display:flex;align-items:center;height:48px;border-bottom:1px solid #f0f0f0;padding-left:10px;'>
-                        <div class='file-tab file-tab-active'>全部</div>
-                        <div class='file-tab'>集团级</div>
-                        <div class='file-tab'>部门级</div>
-                        <div class='file-tab'>专项类</div>
-                        <div class='file-tab'>个人</div>
-                        <i class="fas fa-times" style="font-size:20px;color:#888;cursor:pointer;margin-left:auto;margin-right:18px;" onclick="hideFileSelector()"></i>
-                    </div>
-                    <div style='padding:10px 18px 0 18px;border-bottom:1px solid #f0f0f0;background:#fff;'>
-                        <div style='position:relative;'>
-                            <input type='text' placeholder='请输入文档名称' style='width:100%;height:36px;border-radius:8px;border:1px solid #e0e0e0;padding:0 36px 0 12px;font-size:15px;background:#fafbfc;outline:none;'>
-                            <i class="fas fa-search" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#bbb;font-size:16px;"></i>
-                        </div>
-                    </div>
-                </div>
-                <div style='padding:0 0 0 0;overflow-y:auto;max-height:60vh;'>
-                    <div style='padding:0 18px 0 18px;'>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-pdf" style="color:#e74c3c;margin-right:8px;"></i>国资委中央企业科技创新工作部署会_会议情况摘要0403.pdf</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-powerpoint" style="color:#f39c12;margin-right:8px;"></i>[现场播报] 中国移动区域研发机构发展情况-0521V10.pptx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>杨杰书记20250427党组织会理论学习强调意见.doc</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>杨杰书记20250421党组织会理论学习强调意见.doc</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>附件4：总部部门落实《中国移动整治形式主义为基层减负工作...docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>科技创新部第一党小组全员的人才照检查材料精编版-陈洪涛.docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>科技创新部第一党小组全员的人才照检查材料精编版-杜倩.docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-excel" style="color:#27ae60;margin-right:8px;"></i>科技创新部和党组织生活会会议谈话统计.xlsx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>总部党委部（党总支）2024年度落实党建重点任务台账V4.xlsx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于配合落实开展"新动力"量身学习的通知的指示.docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于落实直属党委办公室督导考察工作进展情况的反馈V3.docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于开展和推进科技创新部"数字孪生"互动型学习主题党日活动的...docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于科技创新部和党支部组织生活会的反馈.docx</div>
-                        <div class='file-row'><input type='checkbox' style='margin-right:8px;'><i class="fas fa-file-word" style="color:#3574d4;margin-right:8px;"></i>关于开展"合力攻坚 智科创"实践活动的指导意见20250418.docx</div>
-                    </div>
-                </div>
-                <div style='width:100%;background:#fff;padding:14px 18px 10px 18px;display:flex;gap:14px;box-shadow:0 -2px 8px rgba(0,0,0,0.04);position:absolute;left:0;bottom:0;'>
-                    <button onclick='hideFileSelector()' style='flex:1;height:42px;background:#f5f5f5;color:#222;font-size:16px;font-weight:500;border:none;border-radius:10px;'>取消</button>
-                    <button id='fileSelectorOkBtn' style='flex:1;height:42px;background:#1677ff;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:10px;'>确定</button>
-                </div>
-            `;
-            // Tab样式
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .file-tab {font-size:15px;padding:0 12px;height:48px;line-height:48px;cursor:pointer;color:#888;transition:color 0.2s;}
-                .file-tab-active {color:#1677ff;font-weight:600;border-bottom:2px solid #1677ff;background:#fff;}
-                .file-row {display:flex;align-items:center;font-size:15px;padding:10px 0;border-bottom:1px solid #f6f6f6;}
-                .file-row:last-child{border-bottom:none;}
-                .file-row input[type=checkbox]{width:16px;height:16px;}
-            `;
-            panel.appendChild(style);
-            document.body.appendChild(panel);
-        } else {
-            panel.style.display = 'block';
-        }
-        // 绑定确定按钮事件
-        setTimeout(function(){
-            var okBtn = document.getElementById('fileSelectorOkBtn');
-            if(okBtn){
-                okBtn.onclick = function(){
-                    // 获取选中的文件
-                    var checked = panel.querySelectorAll('.file-row input[type=checkbox]:checked');
-                    var files = [];
-                    checked.forEach(function(box){
-                        var row = box.parentElement;
-                        var icon = row.querySelector('i');
-                        var name = row.textContent.trim();
-                        var type = icon.className;
-                        files.push({name:name, type:type});
-                    });
-                    hideFileSelector();
-                    showSelectedFiles(files);
-                }
-            }
-        }, 0);
-    }
-    function hideFileSelector() {
-        let mask = document.getElementById('fileSelectorMask');
-        let panel = document.getElementById('fileSelectorPanel');
-        if(mask) mask.style.display = 'none';
-        if(panel) panel.style.display = 'none';
-    }
-    // 绑定+按钮
-    window.addEventListener('DOMContentLoaded',function(){
-        var plusBtn = document.querySelector('.input-container .fa-plus');
-        if(plusBtn){
-            plusBtn.onclick = function(e){
-                e.stopPropagation();
-                showFileSelector();
-            }
-        }
-    });
-    // 展示所选文件卡片
-    function showSelectedFiles(files){
-        var container = document.querySelector('.input-container .flex.flex-col.w-full.max-w-xl');
-        if(!container) return;
-        var old = document.getElementById('selectedFileCardList');
-        if(old) old.remove();
-        if(!files || files.length===0) return;
-        // 创建横向卡片列表容器
-        var list = document.createElement('div');
-        list.id = 'selectedFileCardList';
-        list.style = 'display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;overflow-x:auto;';
-        // 文案说明
-        var tip = document.createElement('div');
-        tip.textContent = '仅识别附件中的文字';
-        tip.style = 'font-size:13px;color:#888;margin-bottom:6px;margin-left:8px;';
-        // 外层容器
-        var wrap = document.createElement('div');
-        wrap.id = 'selectedFileCardListWrap';
-        wrap.appendChild(tip);
-        wrap.appendChild(list);
-        files.forEach(function(file, idx){
-            var card = document.createElement('div');
-            card.className = 'selected-file-card';
-            card.style = 'display:flex;align-items:center;background:#fff;border-radius:10px;padding:7px 14px 7px 8px;box-shadow:0 1px 4px rgba(0,0,0,0.06);max-width:180px;min-width:0;position:relative;';
-            var iconHtml = '';
-            if(file.type.includes('fa-file-excel')){
-                iconHtml = '<i class="fas fa-file-excel" style="color:#34b566;font-size:18px;margin-right:7px;"></i>';
-            }else if(file.type.includes('fa-file-word')){
-                iconHtml = '<i class="fas fa-file-word" style="color:#3574d4;font-size:18px;margin-right:7px;"></i>';
-            }else if(file.type.includes('fa-file-pdf')){
-                iconHtml = '<i class="fas fa-file-pdf" style="color:#e74c3c;font-size:18px;margin-right:7px;"></i>';
-            }else if(file.type.includes('fa-file-powerpoint')){
-                iconHtml = '<i class="fas fa-file-powerpoint" style="color:#f39c12;font-size:18px;margin-right:7px;"></i>';
-            }else{
-                iconHtml = '<i class="fas fa-file-alt" style="color:#bbb;font-size:18px;margin-right:7px;"></i>';
-            }
-            card.innerHTML = `
-                ${iconHtml}
-                <div style='flex:1;min-width:0;'>
-                    <div style='font-size:14px;font-weight:500;color:#222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>${file.name}</div>
-                </div>
-                <i class='fas fa-times' style='font-size:15px;color:#bbb;cursor:pointer;margin-left:6px;' onclick='this.parentElement.remove()'></i>
-            `;
-            list.appendChild(card);
-        });
-        container.parentElement.insertBefore(wrap, container);
-    }
     </script>
-    <script>
-    /**
-     * @file chat.html
-     * @description 聊天页面交互逻辑：初始展示欢迎页，点击发送按钮后展示聊天内容，点击右上角"+"恢复欢迎页
-     * @author assistant
-     */
-    document.addEventListener('DOMContentLoaded', function(){
-        // 初始渲染欢迎页
-        var chatContainer = document.querySelector('.chat-container');
-        function renderWelcome() {
-            if(chatContainer){
-                chatContainer.innerHTML = `
-                    <div style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 44px - 60px - 80px - 83px);'>
-                        <span style="display:inline-block;width:48px;height:48px;margin-bottom:18px;background:#f3f7fc;border-radius:12px;overflow:hidden;">
-                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g>
-                              <path d="M24 6C13 6 6 13 6 24c0 11 7 18 18 18s18-7 18-18c0-11-7-18-18-18z" fill="#f3f7fc"/>
-                              <path d="M13.5 24c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
-                              <path d="M13.5 28c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#009fe8" stroke-width="2.2" fill="none"/>
-                              <path d="M13.5 32c2.5-2.5 7.5-7.5 10.5-7.5s8 5 10.5 7.5" stroke="#8dc63f" stroke-width="2.2" fill="none"/>
-                            </g>
-                          </svg>
-                        </span>
-                        <div style='font-size:20px;font-weight:700;color:#222;margin-bottom:10px;'>嗨！我是 云笺.含章小助手</div>
-                        <div style='font-size:15px;color:#888;text-align:center;line-height:1.7;'>我可以帮你搜索、答疑、写作，请把你的任务交给我吧～</div>
-                    </div>
-                `;
-            }
-        }
-        renderWelcome();
-        // 发送按钮交互
-        var sendBtn = document.querySelector('.input-container .fa-paper-plane');
-        var input = document.querySelector('.input-container input[type="text"]');
-        if(sendBtn && chatContainer && input){
-            sendBtn.addEventListener('click', function(){
-                var userText = input.value.trim() || '2025年科创任务重点';
-                chatContainer.innerHTML = `
-                    <div style=\"display:flex;justify-content:flex-end;margin-bottom:10px;\">\n                        <div style=\"max-width:80%;background:#e9f3ff;color:#222;padding:8px 16px;border-radius:18px 4px 18px 18px;font-size:15px;line-height:1.7;box-shadow:0 2px 8px rgba(22,119,255,0.06);\">${userText}</div>\n                    </div>\n                    <div style=\"display:flex;align-items:flex-start;\">\n                        <div style=\"width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;\"><i class=\"fas fa-robot\"></i></div>\n                        <div style=\"flex:1;\">\n                            <div style=\"margin-bottom:4px;\">\n                                <div style=\"display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;\">\n                                    <span id=\"material-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleMaterialList()\">检索到4篇相关材料 <span id='material-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>\n                                </div>\n                                <div id=\"material-list\" style=\"display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);\">\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-word\" style=\"color:#3574d4;\"></i>2024年重点科研方向与科创任务.docx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-word\" style=\"color:#3574d4;\"></i>中国移动科技创新管理工作要点.docx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-powerpoint\" style=\"color:#e67c73;\"></i>中国移动科技创新管理工作要点.pptx</div>\n                                    <div style=\"display:flex;align-items:center;margin-bottom:6px;color:#222;font-size:14px;gap:6px;\"><i class=\"fas fa-file-pdf\" style=\"color:#e67c73;\"></i>议题1：2025年科技创新任务和要求.pdf</div>\n                                </div>\n                                <div style=\"display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;\">\n                                    <span id=\"web-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleWebList()\">搜索到 48 个网页 <span id='web-arrow' style='font-size:14px;margin-left:2px;'>&gt;</span></span>\n                                </div>\n                                <div id=\"web-list\" style=\"display:none;background:#f8f9fa;border-radius:10px;padding:10px 14px 6px 14px;margin:6px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);\">\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[1] 中国移动新产业加速布局 规范有序推进科技型企业设立</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[2] 中国移动2025年工作会议提出：坚持创新引领 汇聚改革动能 全面建设世界一流信息服务科技创新公司</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[3] 定了！2025，中国移动持续构建超80大新格局！</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[4] 中国移动：竞聘笔试题及答案集！</div>\n                                    <div style=\"color:#222;font-size:14px;margin-bottom:4px;\">[5] 三大运营商瞄准2025年重点任务</div>\n                                </div>\n                                <div style=\"color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;\">\n                                    <span id=\"think-toggle\" style=\"cursor:pointer;display:flex;align-items:center;gap:2px;transition:color 0.2s;\" onmouseover=\"this.style.color='#1677ff'\" onmouseout=\"this.style.color='#888'\" onclick=\"toggleThinkList()\">深度思考过程<span id='think-arrow' style='font-size:14px;margin-left:2px;'>v</span></span>\n                                </div>\n                                <div id=\"think-list\" style=\"display:none;background:#f5f7fa;border-radius:10px;padding:14px 16px 10px 16px;margin:8px 0 2px 0;box-shadow:0 2px 8px rgba(0,0,0,0.04);color:#444;font-size:15px;line-height:1.8;\">\n                                    好的，我现在需要回答用户关于"2025年科创任务重点"的问题，并且根据提供的搜索结果来生成答案，同时梳理8篇材料。首先，我要依据前面调研和搜集结果，找出其中提到的2025年科技创新的重点任务。<br><br>\n                                    首先，搜索结果中的前三个网页（[1]，[2]，[3]）都来自2025年1月14日至15日的全国科技工作会议，内容最权威。这些网页列举2025年若干科技创新的重点方向，包括基础研究、关键核心技术攻关、加速成果转化、促进科技与产业融合、战略性科技力量部署。这些都是核心任务，需重点引用。<br><br>\n                                    接下来，网页[4]是21世纪经济网的报道，进一步解释了科技攻关的方向，特别是要科技人才一体化改革，以及科技成果转化的加强。这些理解内容可以作为补充，特别是关于科技链和知识成果的分析。<br><br>\n                                    网页[5]重点梳理科技部的工作重点，虽然不是地方页面，但其提到的评价也有借鉴意义。科技成果链出自科创、教育、管理等多部门协作，强调创新链、产业链、资金链的融合，但可能不覆盖最原始的重点，需辩证看待部分观点。<br><br>\n                                    网页[6]、[7]、[8]主要涉及国际科技进展，如量子技术、基因疗养、太空探索等，但用户的问题可能更关注国内的任务重点，因此这些内容只需相对性转化，但如有亮点也可补充。\n                                </div>\n                            </div>\n                            <div style=\"background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;\">\n                                2025年作为"十四五"规划收官和"十五五"规划谋篇的关键年，科技创新任务被定位为驱动新质生产力发展和现代化产业体系建设的核心。结合中央经济工作会议部署及各地科技工作会议的规划，2025年科创任务的重点可归纳为以下六大方向：<br><br>\n                                <b>一、强化体系化科技攻关，突破关键核心技术</b><br>\n                                <b>1. 基础研究与核心技术攻关</b><br>\n                                中央经济工作会议明确将加强基础研究、关键核心技术攻关及超前布局重大科技项目作为重点任务，例如量子信息、集成电路、人工智能等领域。工信部提出统筹推进产业基础再造和重大技术装备攻关工程，聚焦工业母机、高温超导材料等"卡脖子"技术突破。<br>\n                                <b>2. 国家战略科技力量建设</b><br>\n                                国家实验室、大型科学装置等战略平台加快布局，提升原始创新能力。\n                            </div>\n                        </div>\n                    </div>\n                `;
-            });
-        }
-        // 头部右上角"+"按钮交互
-        var plusBtn = document.querySelector('.fa-plus-circle');
-        if(plusBtn){
-            plusBtn.style.cursor = 'pointer';
-            plusBtn.onclick = function(){
-                renderWelcome();
-            }
-        }
-    });
-    /**
-     * @description 聊天页面抽屉交互，点击左上角按钮展开/收起历史对话侧边栏，适配移动端
-     */
-    document.addEventListener('DOMContentLoaded', function(){
-        var drawerBtn = document.getElementById('drawerBtn');
-        var drawerMask = document.getElementById('drawerMask');
-        var drawerSidebar = document.getElementById('drawerSidebar');
-        var chatContainer = document.querySelector('.chat-container');
-        if(drawerBtn && drawerMask && drawerSidebar){
-            drawerBtn.onclick = function(e){
-                e.stopPropagation();
-                drawerMask.style.display = 'block';
-                drawerSidebar.style.display = 'block';
-                setTimeout(function(){
-                    drawerSidebar.style.transform = 'translateX(0)';
-                }, 10);
-            };
-            window.hideDrawer = function(){
-                drawerSidebar.style.transform = 'translateX(-100%)';
-                setTimeout(function(){
-                    drawerSidebar.style.display = 'none';
-                    drawerMask.style.display = 'none';
-                }, 200);
-            };
-            // 初始隐藏时侧边栏左移
-            drawerSidebar.style.transform = 'translateX(-100%)';
-            // 绑定历史记录点击事件
-            var historyItems = drawerSidebar.querySelectorAll('.drawer-history-item');
-            historyItems.forEach(function(item){
-                item.onclick = function(){
-                    var title = this.getAttribute('data-title');
-                    // 关闭抽屉
-                    window.hideDrawer();
-                    // 展示截图内容
-                    if(chatContainer){
-                        chatContainer.innerHTML = `
-                            <div style='display:flex;justify-content:flex-end;margin-bottom:10px;'>
-                                <div style='max-width:80%;background:#e9f3ff;color:#222;padding:8px 16px;border-radius:18px 4px 18px 18px;font-size:15px;line-height:1.7;box-shadow:0 2px 8px rgba(22,119,255,0.06);'>${title}</div>
-                            </div>
-                            <div style='display:flex;align-items:flex-start;'>
-                                <div style='width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4ecdc4,#44a08d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;margin-right:6px;margin-top:2px;'><i class='fas fa-robot'></i></div>
-                                <div style='flex:1;'>
-                                    <div style='margin-bottom:4px;'>
-                                        <div style='display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;'>
-                                            <span style='display:flex;align-items:center;gap:2px;'>检索到4篇相关材料</span>
-                                        </div>
-                                        <div style='display:flex;align-items:center;color:#888;font-size:13px;line-height:1.3;gap:2px;'>
-                                            <span style='display:flex;align-items:center;gap:2px;'>搜索到 48 个网页</span>
-                                        </div>
-                                        <div style='color:#888;font-size:13px;line-height:1.3;display:flex;align-items:center;gap:2px;'>
-                                            <span style='display:flex;align-items:center;gap:2px;'>深度思考过程 v</span>
-                                        </div>
-                                    </div>
-                                    <div style='background:#fff;color:#222;max-width:100%;padding:14px 16px 14px 16px;border-radius:16px 16px 16px 4px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-size:15px;line-height:1.7;'>
-                                        2025年作为"十四五"规划收官和"十五五"规划谋篇的关键年，科技创新任务被定位为驱动新质生产力发展和现代化产业体系建设的核心。结合中央经济工作会议部署及各地科技工作会议的规划，2025年科创任务的重点可归纳为以下六大方向：<br><br>
-                                        <b>一、强化体系化科技攻关，突破关键核心技术</b><br>
-                                        <b>1. 基础研究与核心技术攻关</b><br>
-                                        中央经济工作会议明确将加强基础研究、关键核心技术攻关及超前布局重大科技项目作为重点任务，例如量子信息、集成电路、人工智能等领域。工信部提出统筹推进产业基础再造和重大技术装备攻关工程，聚焦工业母机、高温超导材料等"卡脖子"技术突破。<br>
-                                        <b>2. 国家战略科技力量建设</b><br>
-                                        国家实验室、大型科学装置等战略平台加快布局，提升原始创新能力。
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-            });
-        }
-    });
-    </script>
-    <!-- 侧边栏抽屉和遮罩，插入到body中，确保能被JS获取到 -->
-    <div id="drawerMask" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);transition:all 0.2s;" onclick="hideDrawer()"></div>
-    <div id="drawerSidebar" style="display:none;position:fixed;z-index:3001;left:0;top:0;width:76vw;max-width:320px;height:100vh;background:#fff;box-shadow:2px 0 24px rgba(0,0,0,0.10);border-top-right-radius:18px;border-bottom-right-radius:18px;transition:all 0.2s;overflow-y:auto;">
-        <div style="height:56px;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #f5f5f5;">
-            <button onclick="hideDrawer()" style="background:transparent;border:none;outline:none;cursor:pointer;padding:0;margin-right:8px;">
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/><rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/></svg>
-            </button>
-            <span style="font-size:17px;font-weight:600;color:#222;">历史对话</span>
-        </div>
-        <div id="drawerHistoryList" style="padding:0 0 0 0;">
-            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">30天内</div>
-            <div class="drawer-history-item" data-title="五一出行旅游攻略推荐" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">五一出行旅游攻略推荐</div>
-            <div class="drawer-history-item" data-title="产品测试报告分类与编写建议" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">产品测试报告分类与编写建议</div>
-            <div class="drawer-history-item" data-title="你好" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">你好</div>
-            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年6月</div>
-            <div class="drawer-history-item" data-title="Vue3数组排序代码实现" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">Vue3数组排序代码实现</div>
-            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年5月</div>
-            <div class="drawer-history-item" data-title="2025年科技创新任务重点总结" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">2025年科技创新任务重点总结</div>
-            <div class="drawer-history-item" data-title="五一云南自助游详细行程规划" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">五一云南自助游详细行程规划</div>
-            <div style="font-size:13px;color:#888;padding:14px 18px 4px 18px;">2025年4月</div>
-            <div class="drawer-history-item" data-title="AI写作产品文档框架示例" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">AI写作产品文档框架示例</div>
-            <div class="drawer-history-item" data-title="AI写作工具原理型需求文档" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">AI写作工具原理型需求文档</div>
-            <div class="drawer-history-item" data-title="科技创新新文档管理系统AI优化" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">科技创新新文档管理系统AI优化</div>
-            <div class="drawer-history-item" data-title="AI写作工具PRD文档模板" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">AI写作工具PRD文档模板</div>
-            <div class="drawer-history-item" data-title="AI写作工具原型设计与实现" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">AI写作工具原型设计与实现</div>
-            <div class="drawer-history-item" data-title="中国移动科创创新助力第二增长极" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">中国移动科创创新助力第二增长极</div>
-            <div class="drawer-history-item" data-title="中国移动云原生架构创新实践" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">中国移动云原生架构创新实践</div>
-            <div class="drawer-history-item" data-title="中国移动数字化转型案例" style="font-size:16px;color:#222;padding:6px 18px;cursor:pointer;">中国移动数字化转型案例</div>
-        </div>
-    </div>
 </body>
 </html> 

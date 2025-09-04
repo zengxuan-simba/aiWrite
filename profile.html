@@ -35,7 +35,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         .main-content {
-            height: calc(100vh - 44px - 20px); 
+            height: calc(100vh - 44px - 60px); 
             overflow-y: auto;
             padding: 20px;
         }
@@ -129,6 +129,144 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(255,215,0,0.3);
         }
+        
+        /* 侧边栏样式 - 完全按照chat.html的样式 */
+        .drawer-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 76vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 24px rgba(0,0,0,0.10);
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+            transition: all 0.2s;
+            overflow-y: auto;
+            z-index: 3001;
+            transform: translateX(-100%);
+        }
+        .drawer-sidebar.show {
+            transform: translateX(0);
+        }
+        .drawer-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.18);
+            transition: all 0.2s;
+            z-index: 3000;
+            display: none;
+        }
+        .drawer-mask.show {
+            display: block;
+        }
+        .drawer-header {
+            height: 56px;
+            display: flex;
+            align-items: center;    
+            justify-content: space-between;     
+            padding: 0 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .drawer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222;
+        }
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 8px;
+        }
+        .nav-section {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .nav-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+        .nav-btn:hover {
+            background: #f8f9fa;
+        }
+        .nav-btn.active:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .nav-btn-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .history-section {
+            padding: 18px;
+        }
+        .history-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .history-section-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+        .history-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+        .history-item-title {
+            font-size: 15px;
+            color: #222;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .history-item-time {
+            font-size: 12px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -143,15 +281,94 @@
     </div>
 
     <!-- 头部 -->
-    <!--<div class="header">
-        <div class="flex justify-center items-center">
-            <h1 class="text-xl font-semibold text-gray-800">个人中心</h1>
-            <div class="flex gap-3">
-                <i class="fas fa-bell text-gray-600 text-lg"></i>
-                <i class="fas fa-cog text-gray-600 text-lg"></i>
+    <div class="header">
+        <div class="flex items-center justify-between">
+            <!-- 抽屉按钮 -->
+            <button id="drawerBtn" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;outline:none;cursor:pointer;margin-left:-8px;">
+                <span style="display:inline-block;width:22px;height:22px;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                        <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                    </svg>
+                </span>
+            </button>
+            <div class="relative flex-1 flex justify-center">
+                <h1 class="text-lg font-semibold text-gray-800">个人中心</h1>
+            </div>
+            <div style="width:38px;"></div>
+        </div>
+    </div>
+
+    <!-- 侧边栏遮罩 -->
+    <div class="drawer-mask" id="drawerMask"></div>
+    
+    <!-- 侧边栏 -->
+    <div class="drawer-sidebar" id="drawerSidebar">
+        <div class="drawer-header">
+            
+            <span class="drawer-title">云笺.含章</span>
+            <button class="drawer-close-btn" onclick="hideDrawer()">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                    <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- 导航区域 -->
+        <div class="nav-section">
+            <!--<div class="nav-section-title">导航</div>-->
+            <div class="nav-btn" onclick="navigateTo('chat')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="nav-btn-text">问答</div>
+            </div>
+            <div class="nav-btn" onclick="navigateTo('documents')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="nav-btn-text">文档</div>
+            </div>
+            <div class="nav-btn active" onclick="navigateTo('profile')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="nav-btn-text">我的</div>
             </div>
         </div>
-    </div>-->  
+        
+        <!-- 历史对话区域 -->
+        <div class="history-section">
+            <div class="history-section-title">
+                <svg class="history-section-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" fill="#888"/>
+                    <path d="M8.5 4H7v5l4.25 2.52.75-1.23L8.5 8.5V4z" fill="#888"/>
+                </svg>
+                历史对话
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('如何提高工作效率?')">
+                <div class="history-item-title">如何提高工作效率?</div>
+                <div class="history-item-time">2024-01-15 14:30</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('Python编程入门指南')">
+                <div class="history-item-title">Python编程入门指南</div>
+                <div class="history-item-time">2024-01-14 16:45</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('健康饮食建议')">
+                <div class="history-item-title">健康饮食建议</div>
+                <div class="history-item-time">2024-01-13 10:20</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('投资理财基础知识')">
+                <div class="history-item-title">投资理财基础知识</div>
+                <div class="history-item-time">2024-01-12 15:10</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('学习新技能的方法')">
+                <div class="history-item-title">学习新技能的方法</div>
+                <div class="history-item-time">2024-01-11 09:20</div>
+            </div>
+        </div>
+    </div>
 
     <!-- 主内容区域 -->
     <div class="main-content">
@@ -161,185 +378,13 @@
                 <i class="fas fa-user"></i>
             </div>
             <div class="text-xl font-semibold text-gray-800 mb-2">XXX</div>
-            <!--<div class="text-sm text-gray-500 mb-1">公司：中移互联网有限公司</div>  -->
             <div class="text-sm text-gray-500 mb-1">部门：科技创新部</div>
             <div class="text-sm text-gray-500 mb-1">处室：科创体系建设处</div>
             <div class="text-sm text-gray-500 mb-4">邮箱：xxx@chinamobile.com</div>
-            <!--<div class="flex justify-center gap-4">
-                <button class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm">
-                    编辑资料
-                </button>
-                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm">
-                    分享名片
-                </button>
-            </div>-->
         </div>
-
-        <!-- 统计数据 -->
-        <!--<div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">156</div>
-                <div class="stat-label">AI对话次数</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">23</div>
-                <div class="stat-label">文档数量</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">8</div>
-                <div class="stat-label">会议记录</div>
-            </div>
-        </div> -->
-
-        <!-- 会员升级 -->
-        <!--<div class="premium-banner">
-            <div class="text-lg font-semibold text-gray-800 mb-2">
-                <i class="fas fa-crown mr-2"></i>升级到专业版
-            </div>
-            <div class="text-sm text-gray-600 mb-3">解锁更多AI功能和无限使用</div>
-            <button class="px-6 py-2 bg-white text-yellow-600 rounded-lg font-medium">
-                立即升级
-            </button>
-        </div>-->
-
-        <!-- 功能菜单 -->
-        <!--<div class="menu-section">
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <i class="fas fa-history"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">使用历史</div>
-                    <div class="menu-subtitle">查看所有对话和操作记录</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">我的收藏</div>
-                    <div class="menu-subtitle">收藏的对话和文档</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
-                    <i class="fas fa-download"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">导出数据</div>
-                    <div class="menu-subtitle">导出对话记录和文档</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-        </div> -->
-
-        <!-- 设置菜单 -->
-        <!-- <div class="menu-section">
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
-                    <i class="fas fa-palette"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">主题设置</div>
-                    <div class="menu-subtitle">深色模式、字体大小</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div> -->
-            
-            <!--<div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                    <i class="fas fa-language"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">语言设置</div>
-                    <div class="menu-subtitle">中文、English</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">通知设置</div>
-                    <div class="menu-subtitle">推送通知、声音提醒</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">隐私安全</div>  
-                    <div class="menu-subtitle">数据加密、访问控制</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-        </div> -->
 
         <!-- 帮助与支持 -->
         <div class="menu-section">
-            <!--<div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <i class="fas fa-history"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">使用历史</div>
-                    <div class="menu-subtitle">查看所有对话和操作记录</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">我的收藏</div>
-                    <div class="menu-subtitle">收藏的对话和文档</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">通知设置</div>
-                    <div class="menu-subtitle">推送通知、声音提醒</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div> 
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #a8edea, #fed6e3);">
-                    <i class="fas fa-question-circle"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">帮助中心</div>
-                    <div class="menu-subtitle">使用指南、常见问题</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-            
-            <div class="menu-item">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #ffecd2, #fcb69f);">
-                    <i class="fas fa-comments"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">意见反馈</div>
-                    <div class="menu-subtitle">告诉我们您的想法</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div> -->
-            
             <div class="menu-item" id="aboutUsBtn">
                 <div class="menu-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                     <i class="fas fa-info-circle"></i>
@@ -351,6 +396,7 @@
                 <i class="fas fa-chevron-right text-gray-400"></i>
             </div>
         </div>
+        
         <!-- 退出登录按钮 -->
         <div style="width:100%;display:flex;justify-content:center;">
             <button id="logoutBtn" style="margin-top:24px;width:90%;background:#ff4d4f;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:12px;padding:12px 0;box-shadow:0 2px 8px rgba(255,77,79,0.08);cursor:pointer;">退出登录</button>
@@ -372,35 +418,80 @@
             <button id="logoutConfirmBtn" style="flex:1;height:42px;background:#ff4d4f;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:10px;">退出</button>
         </div>
     </div>
+
     <script>
     /**
      * @file profile.html
-     * @description 个人中心"关于我们"与"退出登录"按钮弹窗交互，移动端友好
+     * @description 个人中心页面，包含抽屉菜单、导航和历史对话功能
      */
+    
+    // 侧边栏交互
+    const drawerBtn = document.getElementById('drawerBtn');
+    const drawerMask = document.getElementById('drawerMask');
+    const drawerSidebar = document.getElementById('drawerSidebar');
+    
+    drawerBtn.addEventListener('click', function() {
+        drawerMask.classList.add('show');
+        drawerSidebar.classList.add('show');
+    });
+    
+    function hideDrawer() {
+        drawerMask.classList.remove('show');
+        drawerSidebar.classList.remove('show');
+    }
+    
+    drawerMask.addEventListener('click', hideDrawer);
+
+    // 导航功能
+    function navigateTo(page) {
+        hideDrawer();
+        if (page === 'profile') {
+            // 当前页面，无需跳转
+            return;
+        } else if (page === 'chat') {
+            window.location.href = 'chat.html';
+        } else if (page === 'documents') {
+            window.location.href = 'documents.html';
+        }
+    }
+
+    // 历史对话加载功能
+    function loadHistoryChat(title) {
+        hideDrawer();
+        setTimeout(() => {
+            window.location.href = `chat.html?title=${encodeURIComponent(title)}`;
+        }, 300);
+    }
+    
+    // 原有的弹窗功能
     document.addEventListener('DOMContentLoaded', function(){
         var aboutBtn = document.getElementById('aboutUsBtn');
         var logoutBtn = document.getElementById('logoutBtn');
         var modalMask = document.getElementById('modalMask');
         var aboutModal = document.getElementById('aboutModal');
         var logoutModal = document.getElementById('logoutModal');
+        
         // 显示/隐藏弹窗
         window.hideModal = function(){
             modalMask.style.display = 'none';
             aboutModal.style.display = 'none';
             logoutModal.style.display = 'none';
         }
+        
         if(aboutBtn){
             aboutBtn.onclick = function(){
                 modalMask.style.display = 'block';
                 aboutModal.style.display = 'block';
             }
         }
+        
         if(logoutBtn){
             logoutBtn.onclick = function(){
                 modalMask.style.display = 'block';
                 logoutModal.style.display = 'block';
             }
         }
+        
         // 退出登录确认
         var logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
         if(logoutConfirmBtn){
@@ -412,6 +503,7 @@
                 }, 300);
             }
         }
+        
         // 点击遮罩关闭弹窗
         if(modalMask){
             modalMask.onclick = hideModal;
@@ -419,4 +511,4 @@
     });
     </script>
 </body>
-</html> 
+</html>

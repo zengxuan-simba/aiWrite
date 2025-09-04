@@ -255,6 +255,142 @@
             color: #888;
             line-height: 1.4;
         }
+        /* 侧边栏样式 */
+        .drawer-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 76vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 24px rgba(0,0,0,0.10);
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
+            transition: all 0.2s;
+            overflow-y: auto;
+            z-index: 3001;
+            transform: translateX(-100%);
+        }
+        .drawer-sidebar.show {
+            transform: translateX(0);
+        }
+        .drawer-mask {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.18);
+            transition: all 0.2s;
+            z-index: 3000;
+            display: none;
+        }
+        .drawer-mask.show {
+            display: block;
+        }
+        .drawer-header {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .drawer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222;
+        }
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 8px;
+        }
+        .nav-section {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        .nav-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+        .nav-btn:hover {
+            background: #f8f9fa;
+        }
+        .nav-btn.active:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .nav-btn-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-btn-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .history-section {
+            padding: 18px;
+        }
+        .history-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .history-section-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+        .history-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+        }
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+        .history-item-title {
+            font-size: 15px;
+            color: #222;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .history-item-time {
+            font-size: 12px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -265,6 +401,25 @@
             <i class="fas fa-signal"></i>
             <i class="fas fa-wifi ml-1"></i>
             <i class="fas fa-battery-three-quarters ml-1"></i>
+        </div>
+    </div>
+
+    <!-- 头部 -->
+    <div class="header">
+        <div class="flex items-center justify-between">
+            <!-- 抽屉按钮 -->
+            <button id="drawerBtn" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;outline:none;cursor:pointer;margin-left:-8px;">
+                <span style="display:inline-block;width:22px;height:22px;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                        <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                    </svg>
+                </span>
+            </button>
+            <div class="relative flex-1 flex justify-center">
+                <h1 class="text-lg font-semibold text-gray-800">文档管理</h1>
+            </div>
+            <div style="width:38px;"></div>
         </div>
     </div>
 
@@ -429,11 +584,113 @@
         </div>
     </div>
 
+    <!-- 侧边栏遮罩 -->
+    <div class="drawer-mask" id="drawerMask"></div>
+    
+    <!-- 侧边栏 -->
+    <div class="drawer-sidebar" id="drawerSidebar">
+        <div class="drawer-header">
+            <button class="drawer-close-btn" onclick="hideDrawer()">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="7" width="14" height="2" rx="1" fill="#222"/>
+                    <rect x="4" y="13" width="10" height="2" rx="1" fill="#222"/>
+                </svg>
+            </button>
+            <span class="drawer-title">导航菜单</span>
+        </div>
+        
+        <!-- 导航区域 -->
+        <div class="nav-section">
+            <div class="nav-section-title">导航</div>
+            <div class="nav-btn" onclick="navigateTo('chat')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="nav-btn-text">问答</div>
+            </div>
+            <div class="nav-btn active" onclick="navigateTo('documents')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="nav-btn-text">文档</div>
+            </div>
+            <div class="nav-btn" onclick="navigateTo('profile')">
+                <div class="nav-btn-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="nav-btn-text">我的</div>
+            </div>
+        </div>
+        
+        <!-- 历史对话区域 -->
+        <div class="history-section">
+            <div class="history-section-title">
+                <svg class="history-section-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" fill="#888"/>
+                    <path d="M8.5 4H7v5l4.25 2.52.75-1.23L8.5 8.5V4z" fill="#888"/>
+                </svg>
+                历史对话
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('如何提高工作效率?')">
+                <div class="history-item-title">如何提高工作效率?</div>
+                <div class="history-item-time">2024-01-15 14:30</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('Python编程入门指南')">
+                <div class="history-item-title">Python编程入门指南</div>
+                <div class="history-item-time">2024-01-14 16:45</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('健康饮食建议')">
+                <div class="history-item-title">健康饮食建议</div>
+                <div class="history-item-time">2024-01-13 10:20</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('投资理财基础知识')">
+                <div class="history-item-title">投资理财基础知识</div>
+                <div class="history-item-time">2024-01-12 15:10</div>
+            </div>
+            <div class="history-item" onclick="loadHistoryChat('学习新技能的方法')">
+                <div class="history-item-title">学习新技能的方法</div>
+                <div class="history-item-time">2024-01-11 09:20</div>
+            </div>
+        </div>
+    </div>
+
     <script>
+    // 全局函数定义 - 修复作用域问题
+    function hideDrawer() {
+        const drawerMask = document.getElementById('drawerMask');
+        const drawerSidebar = document.getElementById('drawerSidebar');
+        if (drawerMask && drawerSidebar) {
+            drawerMask.classList.remove('show');
+            drawerSidebar.classList.remove('show');
+        }
+    }
+
+    // 导航功能 - 参考chat.html实现
+    function navigateTo(page) {
+        hideDrawer();
+        if (page === 'documents') {
+            // 当前页面，无需跳转
+            return;
+        } else if (page === 'chat') {
+            window.location.href = 'chat.html';
+        } else if (page === 'profile') {
+            window.location.href = 'profile.html';
+        }
+    }
+
+    // 历史对话加载功能 - 参考chat.html实现
+    function loadHistoryChat(title) {
+        hideDrawer();
+        // 跳转到聊天页面并加载历史对话
+        // 可以通过URL参数传递对话标题，让chat.html页面加载对应的历史对话
+        window.location.href = 'chat.html?history=' + encodeURIComponent(title);
+    }
+
     /**
      * @file documents.html
      * @description 文件列表滚动到底部时显示加载中动画，模拟加载更多文件
      *              优化后的滚动检测和加载更多功能
+     *              新增左侧边栏抽屉菜单功能，完善页面跳转和历史对话交互
      */
     document.addEventListener('DOMContentLoaded', function(){
         var mainContent = document.querySelector('.main-content');
@@ -462,6 +719,24 @@
                     }
                 }
             });
+        }
+
+        // 侧边栏交互
+        const drawerBtn = document.getElementById('drawerBtn');
+        const drawerMask = document.getElementById('drawerMask');
+        const drawerSidebar = document.getElementById('drawerSidebar');
+        
+        if (drawerBtn) {
+            drawerBtn.addEventListener('click', function() {
+                if (drawerMask && drawerSidebar) {
+                    drawerMask.classList.add('show');
+                    drawerSidebar.classList.add('show');
+                }
+            });
+        }
+        
+        if (drawerMask) {
+            drawerMask.addEventListener('click', hideDrawer);
         }
 
         // 文件类型切换交互

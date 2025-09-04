@@ -121,16 +121,7 @@
             font-size: 12px;
             color: #666;
         }
-        .premium-banner {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
-        }
-        
-        /* 侧边栏样式 - 完全按照chat.html的样式 */
+        /* 侧边栏样式 */
         .drawer-sidebar {
             position: fixed;
             left: 0;
@@ -167,8 +158,8 @@
         .drawer-header {
             height: 56px;
             display: flex;
-            align-items: center;    
-            justify-content: space-between;     
+            align-items: center;            
+            justify-content: space-between;         
             padding: 0 18px;
             border-bottom: 1px solid #f5f5f5;
         }
@@ -194,6 +185,30 @@
             font-weight: 600;
             color: #222;
             margin-bottom: 12px;
+        }
+        /* 新建对话按钮样式 */
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f3f4f6;
+            /*border: 1px solid #e5e7eb;*/
+            border-radius: 8px;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .new-chat-btn:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+        }
+        .new-chat-btn i {
+            margin-right: 8px;
         }
         .nav-btn {
             display: flex;
@@ -299,13 +314,45 @@
         </div>
     </div>
 
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 个人资料 -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="text-xl font-semibold text-gray-800 mb-2">XXX</div>
+            <div class="text-sm text-gray-500 mb-1">部门：科技创新部</div>
+            <div class="text-sm text-gray-500 mb-1">处室：科创体系建设处</div>
+            <div class="text-sm text-gray-500 mb-4">邮箱：xxx@chinamobile.com</div>
+        </div>
+
+        <!-- 帮助与支持 -->
+        <div class="menu-section">
+            <div class="menu-item" id="aboutUsBtn">
+                <div class="menu-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-title">关于我们</div>
+                    <div class="menu-subtitle">版本信息、版权声明</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </div>
+        </div>
+        
+        <!-- 退出登录按钮 -->
+        <div style="width:100%;display:flex;justify-content:center;">
+            <button id="logoutBtn" style="margin-top:24px;width:90%;background:#ff4d4f;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:12px;padding:12px 0;box-shadow:0 2px 8px rgba(255,77,79,0.08);cursor:pointer;">退出登录</button>
+        </div>
+    </div>
+
     <!-- 侧边栏遮罩 -->
     <div class="drawer-mask" id="drawerMask"></div>
     
     <!-- 侧边栏 -->
     <div class="drawer-sidebar" id="drawerSidebar">
         <div class="drawer-header">
-            
             <span class="drawer-title">云笺.含章</span>
             <button class="drawer-close-btn" onclick="hideDrawer()">
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -317,7 +364,11 @@
         
         <!-- 导航区域 -->
         <div class="nav-section">
-            <!--<div class="nav-section-title">导航</div>-->
+            <!-- 新建对话按钮 -->
+            <button class="new-chat-btn" onclick="newChat()">
+                <i class="fas fa-plus"></i> 新建对话
+            </button>
+            
             <div class="nav-btn" onclick="navigateTo('chat')">
                 <div class="nav-btn-icon">
                     <i class="fas fa-comments"></i>
@@ -370,39 +421,6 @@
         </div>
     </div>
 
-    <!-- 主内容区域 -->
-    <div class="main-content">
-        <!-- 个人资料 -->
-        <div class="profile-header">
-            <div class="profile-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="text-xl font-semibold text-gray-800 mb-2">XXX</div>
-            <div class="text-sm text-gray-500 mb-1">部门：科技创新部</div>
-            <div class="text-sm text-gray-500 mb-1">处室：科创体系建设处</div>
-            <div class="text-sm text-gray-500 mb-4">邮箱：xxx@chinamobile.com</div>
-        </div>
-
-        <!-- 帮助与支持 -->
-        <div class="menu-section">
-            <div class="menu-item" id="aboutUsBtn">
-                <div class="menu-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                    <i class="fas fa-info-circle"></i>
-                </div>
-                <div class="menu-content">
-                    <div class="menu-title">关于我们</div>
-                    <div class="menu-subtitle">版本信息、版权声明</div>
-                </div>
-                <i class="fas fa-chevron-right text-gray-400"></i>
-            </div>
-        </div>
-        
-        <!-- 退出登录按钮 -->
-        <div style="width:100%;display:flex;justify-content:center;">
-            <button id="logoutBtn" style="margin-top:24px;width:90%;background:#ff4d4f;color:#fff;font-size:16px;font-weight:500;border:none;border-radius:12px;padding:12px 0;box-shadow:0 2px 8px rgba(255,77,79,0.08);cursor:pointer;">退出登录</button>
-        </div>
-    </div>
-
     <!-- 弹窗遮罩和弹窗 -->
     <div id="modalMask" style="display:none;position:fixed;z-index:3000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.18);"></div>
     <div id="aboutModal" style="display:none;position:fixed;z-index:3001;left:50%;top:50%;transform:translate(-50%,-50%);width:86vw;max-width:340px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.18);padding:0 0 18px 0;text-align:center;overflow:hidden;">
@@ -424,6 +442,14 @@
      * @file profile.html
      * @description 个人中心页面，包含抽屉菜单、导航和历史对话功能
      */
+    
+    // 新建对话功能
+    function newChat() {
+        // 关闭侧边栏
+        hideDrawer();
+        // 跳转到chat.html页面
+        window.location.href = 'chat.html';
+    }
     
     // 侧边栏交互
     const drawerBtn = document.getElementById('drawerBtn');
@@ -458,57 +484,42 @@
     // 历史对话加载功能
     function loadHistoryChat(title) {
         hideDrawer();
-        setTimeout(() => {
-            window.location.href = `chat.html?title=${encodeURIComponent(title)}`;
-        }, 300);
+        // 跳转到聊天页面并加载历史对话
+        window.location.href = 'chat.html?history=' + encodeURIComponent(title);
     }
-    
-    // 原有的弹窗功能
-    document.addEventListener('DOMContentLoaded', function(){
-        var aboutBtn = document.getElementById('aboutUsBtn');
-        var logoutBtn = document.getElementById('logoutBtn');
-        var modalMask = document.getElementById('modalMask');
-        var aboutModal = document.getElementById('aboutModal');
-        var logoutModal = document.getElementById('logoutModal');
-        
-        // 显示/隐藏弹窗
-        window.hideModal = function(){
-            modalMask.style.display = 'none';
-            aboutModal.style.display = 'none';
-            logoutModal.style.display = 'none';
-        }
-        
-        if(aboutBtn){
-            aboutBtn.onclick = function(){
-                modalMask.style.display = 'block';
-                aboutModal.style.display = 'block';
-            }
-        }
-        
-        if(logoutBtn){
-            logoutBtn.onclick = function(){
-                modalMask.style.display = 'block';
-                logoutModal.style.display = 'block';
-            }
-        }
-        
-        // 退出登录确认
-        var logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
-        if(logoutConfirmBtn){
-            logoutConfirmBtn.onclick = function(){
-                hideModal();
-                // 模拟跳转登录页
-                setTimeout(function(){
-                    window.location.href = 'login.html';
-                }, 300);
-            }
-        }
-        
-        // 点击遮罩关闭弹窗
-        if(modalMask){
-            modalMask.onclick = hideModal;
-        }
+
+    // 弹窗相关功能
+    function showModal(modalId) {
+        document.getElementById('modalMask').style.display = 'block';
+        document.getElementById(modalId).style.display = 'block';
+    }
+
+    function hideModal() {
+        document.getElementById('modalMask').style.display = 'none';
+        document.getElementById('aboutModal').style.display = 'none';
+        document.getElementById('logoutModal').style.display = 'none';
+    }
+
+    // 关于我们按钮点击事件
+    document.getElementById('aboutUsBtn').addEventListener('click', function() {
+        showModal('aboutModal');
     });
+
+    // 退出登录按钮点击事件
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        showModal('logoutModal');
+    });
+
+    // 确认退出登录
+    document.getElementById('logoutConfirmBtn').addEventListener('click', function() {
+        // 这里可以添加实际的退出登录逻辑
+        //alert('退出登录成功');
+        window.location.href = 'login.html';
+        hideModal();
+    });
+
+    // 点击遮罩关闭弹窗
+    document.getElementById('modalMask').addEventListener('click', hideModal);
     </script>
 </body>
 </html>
